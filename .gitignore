@@ -1,6 +1,10 @@
-client/node_modules/
+yarn.lock
+.DS_Store
+
+client/node_modules
 client/coverage
 client/build
+client/package.json
 client/yarn.lock
 client/.DS_Store
 client/.env.local
@@ -10,3 +14,5 @@ client/.env.production.local
 client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
+
+reactnd-project-readable-starter
