@@ -10,7 +10,3 @@ client/.env.production.local
 client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
-
-server/node_modules/
-server/.DS_Store
-server/yarn.lock
