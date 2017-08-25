@@ -12,17 +12,17 @@ class SmredditNavbar extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem eventKey={1}>
+            <NavItem>
               <Link to='/'>
                 <Glyphicon glyph="home" /> Home
               </Link>
             </NavItem>
-            <NavItem eventKey={2}>
+            <NavItem>
               <Link to='/list'>
                 <Glyphicon glyph="list" /> Categories
               </Link>
             </NavItem>
-            <NavItem eventKey={3}>
+            <NavItem>
               <Link to='/add'>
                 <Glyphicon glyph="plus" /> Add
               </Link>

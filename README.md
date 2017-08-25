@@ -1,7 +1,7 @@
 # React Redux Reddit Clone
 
 ## About
-This project is a Reddit/Hacker News clone and the second project of the React Nanodegree. This portion is meant to give me a better understanding of React and how Redux is used.
+This project is a Reddit/Hacker News clone using a Monokai color scheme and the second project of the React Nanodegree. This portion is meant to give me a better understanding of React and how Redux is used.
 
 ## Required Software
 1. git

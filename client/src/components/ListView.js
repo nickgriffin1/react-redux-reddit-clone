@@ -4,15 +4,27 @@ import { getPosts } from '../utils/api'
 import Post from '../components/Post'
 
 class ListView extends Component {
+  state = {
+    posts: []
+  }
   componentDidMount() {
-    console.log(getPosts())
+    Promise.resolve(getPosts()).then((posts) => {
+      this.setState({ posts })
+    })
   }
   render() {
     return (
       <Grid>
-        <Post />
-        <Post />
-        <Post />
+        {this.state.posts.map((post) => (
+          <Post
+            key={post.id}
+            title={post.title}
+            author={post.author}
+            body={post.body}
+            category={post.category}
+            score={post.voteScore}
+          />
+        ))}
       </Grid>
     );
   }
