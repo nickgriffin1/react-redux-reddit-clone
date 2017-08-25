@@ -1,10 +1,10 @@
 yarn.lock
 .DS_Store
+package-lock.json
 
 client/node_modules
 client/coverage
 client/build
-client/package.json
 client/yarn.lock
 client/.DS_Store
 client/.env.local

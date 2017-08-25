@@ -1,14 +1,13 @@
-# react-redux-reddit-clone
-Project 2 of the React Nanodegree
+# React Redux Reddit Clone
 
-# About
+## About
 This project is a Reddit/Hacker News clone and the second project of the React Nanodegree. This portion is meant to give me a better understanding of React and how Redux is used.
 
-# Required Software
+## Required Software
 1. git
 2. Node.js
 
-# Installation
+## Installation
 1. `git clone https://github.com/nickgriffin1/react-redux-reddit-clone.git` to clone the repo
 2. `cd react-redux-reddit-clone` to move the project
 3. `git clone https://github.com/udacity/reactnd-project-readable-starter` within the project. This will be our server.
