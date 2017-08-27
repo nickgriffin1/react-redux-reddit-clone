@@ -29,11 +29,24 @@ button:focus {
   outline: 0;
 }
 
+.list-view-sort-button {
+  background-color: #75715E;
+  border-radius: 2rem;
+  margin-top: 1rem;
+  color: white;
+  width: 10rem;
+}
+
+.list-view-sort {
+  margin-left: 2rem;
+}
+
 .post-container {
   width: 100%;
   background-color: #272822;
   border: 1px solid #FD971F;
-  margin-top: 1rem
+  margin-top: 1rem;
+  padding: 0;
 }
 
 .post-title {
@@ -45,10 +58,9 @@ button:focus {
   color: #F92672;
 }
 
-.post-button {
+.post-timestamp {
   float: right;
   color: white;
-  background-color: #75715E;
   border-radius: 30px;
   margin-bottom: 1rem;
 }
@@ -60,4 +72,14 @@ button:focus {
 .post-score {
   color: #A6E22E;
   float: right;
+}
+
+.category-row {
+  margin: .3rem;
+  background-color: #272822;
+  border: 1px solid #FD971F;
+}
+
+.category-text {
+  margin-left: 50px;
 }

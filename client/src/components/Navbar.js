@@ -18,7 +18,7 @@ class SmredditNavbar extends Component {
               </Link>
             </NavItem>
             <NavItem>
-              <Link to='/list'>
+              <Link to='/categories'>
                 <Glyphicon glyph="list" /> Categories
               </Link>
             </NavItem>

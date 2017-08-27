@@ -17,10 +17,8 @@ export function getCategories () {
     'Authorization': 'the answer is 42'
   }
   return fetch(`http://localhost:5001/categories`, { headers: headers })
-    .then((data) => {
-      console.log('getCategories', data.json())
-      return data.json()
-    })
+    .then((res) => res.json())
+    .then((categories) => { return categories })
     .catch((e) => {
       console.log("Error in fetchPost", e)
     })
