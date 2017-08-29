@@ -25,16 +25,17 @@ a:focus {
   text-decoration: none;
 }
 
-button:focus {
-  outline: 0;
-}
-
 .list-view-sort-button {
   background-color: #75715E;
   border-radius: 2rem;
   margin-top: 1rem;
   color: white;
   width: 10rem;
+}
+
+.list-view-sort-button:focus {
+  border: none;
+  outline: none;
 }
 
 .list-view-sort {

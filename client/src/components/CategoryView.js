@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Row, Col, Glyphicon } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { Grid, Row, Col, Glyphicon } from 'react-bootstrap'
 import { getCategories } from '../utils/api'
 
 class CategoryView extends Component {
@@ -14,15 +15,17 @@ class CategoryView extends Component {
   render() {
     console.log(this.state.categories)
     return (
-      <div>
+      <Grid>
         {this.state.categories.map((category, index) => (
           <Row>
             <Col className='category-row' sm={12} lg={12}>
-              <h3 className='category-text'><Glyphicon glyph="list" /> { category.name }</h3>
+              <Link to={'/category/' + category.path}>
+                <h3 className='category-text'><Glyphicon glyph="list" /> { category.name }</h3>
+              </Link>
             </Col>
           </Row>
         ))}
-      </div>
+      </Grid>
     );
   }
 }

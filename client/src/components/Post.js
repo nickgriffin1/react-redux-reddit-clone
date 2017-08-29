@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
-import Timestamp from 'react-timestamp'
-import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
+import React from 'react'
+import { Row, Col, Glyphicon } from 'react-bootstrap'
 
-export default function Post({ score, title, body, author, category, timestamp }) {
+export default function Post({ score, title, body, author, category, time, date }) {
   return (
     <Row className='post-container'>
       <Col xs={1} md={1} lg={1}>
@@ -21,7 +20,7 @@ export default function Post({ score, title, body, author, category, timestamp }
             <h4 className='post-category'>{ category }</h4>
           </Col>
           <Col xs={12} lg={12}>
-            <p className='post-timestamp'><Glyphicon glyph="time" /> <Timestamp time={timestamp} /></p>
+            <p className='post-timestamp'>{date}</p>
           </Col>
         </Row>
       </Col>
