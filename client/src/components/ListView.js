@@ -30,6 +30,7 @@ class ListView extends Component {
     }
   }
   render() {
+    console.log(this.state.posts)
     return (
       <Grid>
         <Row className='post-container'>
@@ -52,6 +53,7 @@ class ListView extends Component {
         {this.state.posts.map((post) => (
           <Post
             key={post.id}
+            id={post.id}
             title={post.title}
             author={post.author}
             body={post.body}

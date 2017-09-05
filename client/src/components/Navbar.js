@@ -13,17 +13,17 @@ class SmredditNavbar extends Component {
         <Navbar.Collapse>
           <Nav>
             <NavItem>
-              <Link to='/'>
+              <Link className='navbar-link' to='/'>
                 <Glyphicon glyph="home" /> Home
               </Link>
             </NavItem>
             <NavItem>
-              <Link to='/categories'>
+              <Link className='navbar-link' to='/categories'>
                 <Glyphicon glyph="list" /> Categories
               </Link>
             </NavItem>
             <NavItem>
-              <Link to='/add'>
+              <Link className='navbar-link' to='/add'>
                 <Glyphicon glyph="plus" /> Add
               </Link>
             </NavItem>

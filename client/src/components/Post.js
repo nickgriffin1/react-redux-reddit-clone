@@ -1,14 +1,17 @@
 import React from 'react'
-import { Row, Col, Glyphicon } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { Row, Col, Glyphicon, Button } from 'react-bootstrap'
 
-export default function Post({ score, title, body, author, category, time, date }) {
+export default function Post({ id, score, title, body, author, category, time, date }) {
   return (
     <Row className='post-container'>
       <Col xs={1} md={1} lg={1}>
         <h3 className='post-score'>{ score }</h3>
       </Col>
       <Col xs={8} md={8} lg={8}>
-        <h4 className='post-title'>{ title }</h4>
+        <Link to={'/post/' + id}>
+          <h4 className='post-title'>{ title }</h4>
+        </Link>
         <p className='post-body'>{ body }</p>
         <p className='post-author'>
           <Glyphicon glyph="user" /> { author }

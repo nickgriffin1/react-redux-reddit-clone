@@ -23,3 +23,16 @@ export function getCategories () {
       console.log("Error in fetchPost", e)
     })
 }
+
+export function getCategory (category) {
+  const headers = {
+    method: 'GET',
+    'Authorization': 'the answer is 42'
+  }
+  return fetch(`http://localhost:5001/categories/` + category, { headers: headers })
+    .then((res) => res.json())
+    .then((category) => { return category })
+    .catch((e) => {
+      console.log("Error in fetchPost", e)
+    })
+}

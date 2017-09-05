@@ -17,8 +17,8 @@ class CategoryView extends Component {
     return (
       <Grid>
         {this.state.categories.map((category, index) => (
-          <Row>
-            <Col className='category-row' sm={12} lg={12}>
+          <Row key={index}>
+            <Col className='category-row' sm={12} lg={8} lgOffset={2}>
               <Link to={'/category/' + category.path}>
                 <h3 className='category-text'><Glyphicon glyph="list" /> { category.name }</h3>
               </Link>
