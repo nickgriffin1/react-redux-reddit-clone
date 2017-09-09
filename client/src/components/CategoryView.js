@@ -16,15 +16,27 @@ class CategoryView extends Component {
     console.log(this.state.categories)
     return (
       <Grid>
+      <Row>
+        <Col className='category-row' xs={12}>
+          <h1 className='category-text'>View a Category</h1>
+        </Col>
         {this.state.categories.map((category, index) => (
-          <Row key={index}>
-            <Col className='category-row' sm={12} lg={8} lgOffset={2}>
-              <Link to={'/category/' + category.path}>
-                <h3 className='category-text'><Glyphicon glyph="list" /> { category.name }</h3>
-              </Link>
-            </Col>
-          </Row>
+          <Col key={index} className='category-row' xs={12}>
+            <Link to={'/category/' + category.path}>
+              <Row>
+                <h2 className='category-text'>
+                  <Col xs={11}>
+                    { category.name }
+                  </Col>
+                  <Col xs={1}>
+                    <Glyphicon glyph='chevron-right' />
+                  </Col>
+                </h2>
+              </Row>
+            </Link>
+          </Col>
         ))}
+        </Row>
       </Grid>
     );
   }

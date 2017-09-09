@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
 
 import {
-  GET_POSTS,
+  ADD_POST,
 } from '../actions'
 
 function mainView(state = {}, action) {
   switch (action.type) {
-    case GET_POSTS :
+    case ADD_POST :
       return {
         ...state,
       }

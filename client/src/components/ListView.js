@@ -17,7 +17,7 @@ class ListView extends Component {
     return  date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear()
   }
   filterPosts = (sorter) => {
-    if (sorter === 'points') {
+    if (sorter === 'top') {
       console.log('sorting by points')
       this.setState((prevState) => {
         return { posts: prevState.posts.sort((post) => { return post.voteScore }).reverse() }
@@ -25,12 +25,11 @@ class ListView extends Component {
     } else if (sorter === 'date') {
       console.log('sorting by date')
       this.setState((prevState) => {
-        return { posts: prevState.posts.sort((post) => { return post.timestamp }) }
+        return { posts: prevState.posts.sort((a, b) => { return b.timestamp - a.timestamp }) }
       })
     }
   }
   render() {
-    console.log(this.state.posts)
     return (
       <Grid>
         <Row className='post-container'>
@@ -40,14 +39,14 @@ class ListView extends Component {
           <Col sm={3} lg={3}>
             <Button
               className='list-view-sort-button'
-              onClick={() => this.filterPosts('points')}
-            >Points</Button>
+              onClick={() => this.filterPosts('top')}
+            >Top</Button>
           </Col>
           <Col sm={3} lg={3}>
             <Button
               className='list-view-sort-button'
               onClick={() => this.filterPosts('date')}
-            >Date</Button>
+            >Recent</Button>
           </Col>
         </Row>
         {this.state.posts.map((post) => (

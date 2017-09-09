@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Col, Glyphicon, Button } from 'react-bootstrap'
+import { Row, Col, Glyphicon } from 'react-bootstrap'
 
 export default function Post({ id, score, title, body, author, category, time, date }) {
   return (
