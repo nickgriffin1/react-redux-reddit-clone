@@ -30,6 +30,18 @@ a:focus {
   width: 100%;
 }
 
+.nav-item {
+  width: 15rem;
+}
+
+.nav-item a {
+  padding: 0;
+}
+
+.nav-item-active {
+  border-bottom: 3px solid white;
+}
+
 .list-view-sort-button {
   background-color: #75715E;
   border-radius: 2rem;

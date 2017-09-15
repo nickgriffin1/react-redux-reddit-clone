@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Form, FormGroup, FormControl, ControlLabel, InputGroup, Button, Row, Col, Glyphicon } from 'react-bootstrap'
+import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap'
 
 class AddView extends Component {
   handleSubmit = () => {
-    this.setState({ time: Date.now() })
-    console.log('this.state', this.state)
+    this.setState({ time: Date.now() }, () => {
+      console.log('this.state', this.state)
+    })
   }
   render() {
     return (

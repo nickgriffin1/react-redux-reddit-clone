@@ -1,12 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
+import { Route } from 'react-router'
 import App from './components/App'
 import registerServiceWorker from './utils/registerServiceWorker'
 import './index.css'
-import { createStore, applyMiddleware, compose } from 'redux'
-import reducer from './reducers'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import reducers from './reducers'
 import { Provider } from 'react-redux'
+import createHistory from 'history/createBrowserHistory'
+import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
+
+const history = createHistory()
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -17,21 +21,27 @@ const logger = store => next => action => {
   return result
 }
 
+const middleware = routerMiddleware(history, logger)
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
-  reducer,
+  combineReducers({
+    ...reducers,
+    router: routerReducer
+  }),
   composeEnhancers(
-    applyMiddleware(logger)
+    applyMiddleware(middleware)
   )
 )
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ConnectedRouter history={history}>
+      <Route path="/" component={App} />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 )
+
 registerServiceWorker()

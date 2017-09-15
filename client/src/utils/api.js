@@ -1,9 +1,12 @@
+const url = 'localhost'
+const port = '3001'
+
 export function getPosts () {
   const headers = {
     method: 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://localhost:5001/posts`, { headers: headers })
+  return fetch(`http://` + url + `:` + port + `/posts`, { headers: headers })
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
@@ -16,7 +19,7 @@ export function getCategories () {
     method: 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://localhost:5001/categories`, { headers: headers })
+  return fetch(`http://` + url + `:` + port + `/categories`, { headers: headers })
     .then((res) => res.json())
     .then((categories) => { return categories })
     .catch((e) => {
@@ -29,7 +32,7 @@ export function getCategory (category) {
     method: 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://localhost:5001/categories/` + category, { headers: headers })
+  return fetch(`http://` + url + `:` + port + `/categories/` + category, { headers: headers })
     .then((res) => res.json())
     .then((category) => { return category })
     .catch((e) => {
