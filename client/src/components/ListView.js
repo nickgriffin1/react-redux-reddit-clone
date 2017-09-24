@@ -1,44 +1,59 @@
 import React, { Component } from 'react'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
 import { getPosts } from '../utils/api'
 import Post from '../components/Post'
 
 class ListView extends Component {
   state = {
-    posts: []
+    posts: [],
+    filteredPosts: []
   }
+
   componentDidMount() {
-    Promise.resolve(getPosts()).then((posts) => {
-      this.setState({ posts })
-    })
-    if (this.props.filter !== undefined) {
-      this.filterPosts('category', this.props.filter)
+    this.setPosts()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.location.pathname === '/' && prevProps.location.pathname !== '/') {
+      this.setState({ filteredPosts: this.state.posts })
     }
   }
+
+  setPosts = () => {
+    Promise.resolve(getPosts()).then((posts) => {
+      this.setState({ posts, filteredPosts: posts })
+      if (this.props.filter !== undefined) {
+        this.filterPosts('category', this.props.filter)
+      }
+    })
+  }
+
   formatDate = (ts) => {
     const date = new Date(ts)
     return  date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear()
   }
+
   filterPosts = (sorter, category) => {
     if (sorter === 'top') {
       console.log('sorting by points')
       this.setState((prevState) => {
-        return { posts: prevState.posts.sort((post) => { return post.voteScore }).reverse() }
+        return { filteredPosts: prevState.posts.sort((post) => { return post.voteScore }).reverse() }
       })
     } else if (sorter === 'date') {
       console.log('sorting by date')
       this.setState((prevState) => {
-        return { posts: prevState.posts.sort((a, b) => { return b.timestamp - a.timestamp }) }
+        return { filteredPosts: prevState.posts.sort((a, b) => { return b.timestamp - a.timestamp }) }
       })
     } else if (sorter === 'category') {
       console.log('sorting by category')
       this.setState((prevState) => {
-        return { posts: prevState.posts.filter((post) => { return post.category === category})}
+        return { filteredPosts: prevState.posts.filter((post) => { return post.category === category})}
       })
     }
   }
+
   render() {
-    console.log('list view props', this.props)
     return (
       <Grid>
         <Row className='post-container'>
@@ -58,7 +73,7 @@ class ListView extends Component {
             >Recent</Button>
           </Col>
         </Row>
-        {this.state.posts.map((post) => (
+        {this.state.filteredPosts.map((post) => (
           <Post
             key={post.id}
             id={post.id}
@@ -75,4 +90,4 @@ class ListView extends Component {
   }
 }
 
-export default ListView
+export default withRouter(ListView)
