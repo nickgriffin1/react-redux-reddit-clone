@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap'
 
 class AddView extends Component {
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.preventDefault()
     this.setState({ time: Date.now() }, () => {
       console.log('this.state', this.state)
     })
@@ -22,14 +23,16 @@ class AddView extends Component {
                   onChange={(e) => this.setState({ title: e.target.value})}
                 />
               </FormGroup>
+
               <FormGroup>
-              <ControlLabel>Body</ControlLabel>
+                <ControlLabel>Body</ControlLabel>
                 <FormControl
                   type='text'
                   className='add-form-text-box'
                   onChange={(e) => this.setState({ body: e.target.value})}
                 />
               </FormGroup>
+
               <FormGroup>
                 <ControlLabel>Author</ControlLabel>
                 <FormControl
@@ -38,6 +41,7 @@ class AddView extends Component {
                   onChange={(e) => this.setState({ author: e.target.value})}
                 />
               </FormGroup>
+
               <FormGroup>
                 <ControlLabel>Category</ControlLabel>
                 <FormControl
@@ -46,8 +50,9 @@ class AddView extends Component {
                   onChange={(e) => this.setState({ category: e.target.value})}
                 />
               </FormGroup>
+              
               <Button
-                onClick={() => this.handleSubmit()}
+                onClick={(e) => this.handleSubmit(e)}
                 type='submit'
               >Submit</Button>
             </Form>

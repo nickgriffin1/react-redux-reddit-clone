@@ -11,10 +11,12 @@ class ListView extends Component {
   }
 
   componentDidMount() {
+    // intialize posts
     this.setPosts()
   }
 
   componentDidUpdate(prevProps) {
+    // reset filtered posts when on main page
     if(this.props.location.pathname === '/' && prevProps.location.pathname !== '/') {
       this.setState({ filteredPosts: this.state.posts })
     }
@@ -38,12 +40,12 @@ class ListView extends Component {
     if (sorter === 'top') {
       console.log('sorting by points')
       this.setState((prevState) => {
-        return { filteredPosts: prevState.posts.sort((post) => { return post.voteScore }).reverse() }
+        return { filteredPosts: prevState.filteredPosts.sort((post) => { return post.voteScore }).reverse() }
       })
     } else if (sorter === 'date') {
       console.log('sorting by date')
       this.setState((prevState) => {
-        return { filteredPosts: prevState.posts.sort((a, b) => { return b.timestamp - a.timestamp }) }
+        return { filteredPosts: prevState.filteredPosts.sort((a, b) => { return b.timestamp - a.timestamp }) }
       })
     } else if (sorter === 'category') {
       console.log('sorting by category')
@@ -73,6 +75,15 @@ class ListView extends Component {
             >Recent</Button>
           </Col>
         </Row>
+
+        {this.props.filter && 
+          <Row className='post-container'>
+            <Col xs={12}>
+              <h1>Category: {this.props.filter}</h1>
+            </Col>
+          </Row>
+        }
+
         {this.state.filteredPosts.map((post) => (
           <Post
             key={post.id}

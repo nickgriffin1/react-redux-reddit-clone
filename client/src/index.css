@@ -91,6 +91,16 @@ a:focus {
   float: right;
 }
 
+.post-arrow {
+  font-size: 2rem;
+  color: #75715E;
+  float: right;
+}
+
+.post-arrow:hover {
+  color: #AE81FF;
+}
+
 .post-edit-button {
   float: right;
   margin-bottom: .5rem;

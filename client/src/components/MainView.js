@@ -4,7 +4,6 @@ import ListView from './ListView'
 import CategoryView from './CategoryView'
 import AddView from './AddView'
 import NotFoundView from './NotFoundView'
-import CategoryDetailView from './CategoryDetailView'
 
 class MainView extends Component {
   render() {
