@@ -24,7 +24,7 @@ class CategoryView extends Component {
         </Col>
         {this.state.categories.map((category, index) => (
           <Col key={index} className='category-row' xs={12}>
-            <Link to={'/category/' + category.path}>
+            <Link to={'/categories/' + category.path}>
               <Row>
                 <h2 className='category-text'>
                   <Col xs={11}>

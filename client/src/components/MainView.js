@@ -4,6 +4,7 @@ import ListView from './ListView'
 import CategoryView from './CategoryView'
 import AddView from './AddView'
 import NotFoundView from './NotFoundView'
+import CategoryDetailView from './CategoryDetailView'
 
 class MainView extends Component {
   render() {
@@ -12,6 +13,9 @@ class MainView extends Component {
       	<Switch>
 	        <Route exact path='/' component={ListView} />
 	        <Route exact path='/categories' component={CategoryView} />
+	        <Route path='/categories/:category' render={({ match }) => (
+	        	<ListView filter={match.params.category} />
+	        )}/>
 	        <Route exact path='/add' component={AddView} />
 	        <Route component={NotFoundView} />
 	      </Switch>

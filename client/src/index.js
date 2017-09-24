@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Route } from 'react-router'
-import App from './components/App'
+import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 import './index.css'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addPost } from '../actions/index'
-import { getCategories } from '../utils/api'
-import SmredditNavbar from './Navbar'
-import MainView from './MainView'
+import { addPost } from './actions/index'
+import { getCategories } from './utils/api'
+import MyNavbar from './components/Navbar'
+import MainView from './components/MainView'
 
 class App extends Component {
   state = {
@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SmredditNavbar/>
+        <MyNavbar/>
         <MainView></MainView>
       </div>
     );

@@ -11,12 +11,15 @@ class ListView extends Component {
     Promise.resolve(getPosts()).then((posts) => {
       this.setState({ posts })
     })
+    if (this.props.filter !== undefined) {
+      this.filterPosts('category', this.props.filter)
+    }
   }
   formatDate = (ts) => {
     const date = new Date(ts)
     return  date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear()
   }
-  filterPosts = (sorter) => {
+  filterPosts = (sorter, category) => {
     if (sorter === 'top') {
       console.log('sorting by points')
       this.setState((prevState) => {
@@ -27,9 +30,15 @@ class ListView extends Component {
       this.setState((prevState) => {
         return { posts: prevState.posts.sort((a, b) => { return b.timestamp - a.timestamp }) }
       })
+    } else if (sorter === 'category') {
+      console.log('sorting by category')
+      this.setState((prevState) => {
+        return { posts: prevState.posts.filter((post) => { return post.category === category})}
+      })
     }
   }
   render() {
+    console.log('list view props', this.props)
     return (
       <Grid>
         <Row className='post-container'>
