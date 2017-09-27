@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, Glyphicon } from 'react-bootstrap'
+import { votePost } from '../utils/api'
 
 class Post extends React.Component {
   state = {
@@ -18,7 +19,9 @@ class Post extends React.Component {
       this.setState((prevState) => {
         return { score: prevState.score + changeInScore }
       })
-      // TODO call redux to change score on server 
+      // call api to set votes
+      const type = changeInScore === 1 ? 'upVote' : 'downVote'
+      votePost(this.props.id, type)
     }
   }
 
@@ -41,7 +44,7 @@ class Post extends React.Component {
           </Row>
         </Col>
         <Col xs={8} md={8} lg={8}>
-          <Link to={'/post/' + this.props.id}>
+          <Link to={'/posts/' + this.props.id}>
             <h4 className='post-title'>{this.props.title}</h4>
           </Link>
           <p className='post-body'>{this.props.body}</p>

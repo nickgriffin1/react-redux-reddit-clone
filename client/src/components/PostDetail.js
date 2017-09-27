@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 
 class PostDetail extends React.Component {
   render() {

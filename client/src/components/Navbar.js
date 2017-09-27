@@ -16,7 +16,7 @@ class SmredditNavbar extends Component {
         glyph: 'list'
       },
       {
-        name: 'Add',
+        name: 'Add/Edit',
         route: '/add',
         glyph: 'plus'
       }

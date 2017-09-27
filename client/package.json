@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "history": "^4.7.2",
-    "react": "^15.6.1",
+    "react": "^16.0.0",
     "react-bootstrap": "^0.31.2",
     "react-date": "^2.0.0",
-    "react-dom": "^15.6.1",
+    "react-dom": "^16.0.0",
     "react-icons": "^2.2.5",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",

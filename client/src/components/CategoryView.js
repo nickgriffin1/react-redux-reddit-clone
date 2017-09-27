@@ -15,7 +15,6 @@ class CategoryView extends Component {
   }
   
   render() {
-    console.log(this.state.categories)
     return (
       <Grid>
       <Row>

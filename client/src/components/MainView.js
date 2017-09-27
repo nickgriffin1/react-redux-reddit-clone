@@ -4,6 +4,7 @@ import ListView from './ListView'
 import CategoryView from './CategoryView'
 import AddView from './AddView'
 import NotFoundView from './NotFoundView'
+import PostDetail from './PostDetail'
 
 class MainView extends Component {
   render() {
@@ -16,6 +17,7 @@ class MainView extends Component {
 	        	<ListView filter={match.params.category} />
 	        )}/>
 	        <Route exact path='/add' component={AddView} />
+	        <Route exact path='/posts/:post' component={PostDetail} />
 	        <Route component={NotFoundView} />
 	      </Switch>
 	    </div>
