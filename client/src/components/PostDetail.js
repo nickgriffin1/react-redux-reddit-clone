@@ -5,7 +5,7 @@ class PostDetail extends React.Component {
   render() {
     return (
       <Row>
-        <Col xs={12} lg={12}>
+        <Col xs={12} lg={8} lgOffset={2} >
           <Button className='post-edit-button'>
             <Glyphicon glyph="pencil" /> Edit
           </Button>

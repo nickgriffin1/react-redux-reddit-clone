@@ -6,9 +6,10 @@ import {
 
 function mainView(state = {}, action) {
   switch (action.type) {
-    case ADD_POST :
+    case 'ADD_POST' :
       return {
         ...state,
+        action
       }
     default :
       return state

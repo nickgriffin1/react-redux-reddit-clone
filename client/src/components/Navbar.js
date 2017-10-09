@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Nav, Navbar, NavItem, Glyphicon } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Navbar, Glyphicon } from 'react-bootstrap'
+import { NavLink } from 'react-router-dom'
 
 class SmredditNavbar extends Component {
   state = {
@@ -26,26 +26,17 @@ class SmredditNavbar extends Component {
   render() {
     return (
       <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>Smreddit</Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
         <Navbar.Collapse>
-          <Nav>
-            {this.state.routes.map((item, index) => (
-              <NavItem
+          {this.state.routes.map((item, index) => (
+              <NavLink
                 key={index}
-                className={this.state.route === item.route ? 'nav-item nav-item-active' : 'nav-item'}
-              >
-                <Link
-                  className='navbar-link' to={item.route}
-                  onClick={() => this.setState({ route: item.route })}
-                > 
-                  <Glyphicon glyph={item.glyph} /> {item.name}
-                </Link>
-              </NavItem>
-            ))}
-          </Nav>
+                className={this.state.route === item.route ? 'navbar-link nav-item-active' : 'navbar-link'}
+                to={item.route}
+                onClick={() => this.setState({ route: item.route })}
+              > 
+                <Glyphicon glyph={item.glyph} /> {item.name}
+              </NavLink>
+          ))}
         </Navbar.Collapse>
       </Navbar>
     );

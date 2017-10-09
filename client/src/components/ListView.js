@@ -36,6 +36,10 @@ class ListView extends Component {
     return  date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear()
   }
 
+  capitalize = (word) => {
+    return word.slice(0, 1).toUpperCase() + word.slice(1)
+  }
+
   filterPosts = (sorter, category) => {
     if (sorter === 'top') {
       console.log('sorting by points')
@@ -58,17 +62,12 @@ class ListView extends Component {
   render() {
     return (
       <Grid>
-        <Row className='post-container'>
-          <Col sm={3} lg={3} className='list-view-sort'>
-            <h3>Sort by: </h3>
-          </Col>
-          <Col sm={3} lg={3}>
+        <Row className='post-container post-container-buttons'>
+          <Col xs={11} xsOffset={1}>
             <Button
               className='list-view-sort-button'
               onClick={() => this.filterPosts('top')}
             >Top</Button>
-          </Col>
-          <Col sm={3} lg={3}>
             <Button
               className='list-view-sort-button'
               onClick={() => this.filterPosts('date')}
@@ -79,12 +78,12 @@ class ListView extends Component {
         {this.props.filter && 
           <Row className='post-container'>
             <Col xs={12}>
-              <h1>Category: {this.props.filter}</h1>
+              <h1>{this.capitalize(this.props.filter)}</h1>
             </Col>
           </Row>
         }
 
-        {this.state.filteredPosts.map((post) => (
+        {this.state.filteredPosts && this.state.filteredPosts.map((post) => (
           <Post
             key={post.id}
             id={post.id}

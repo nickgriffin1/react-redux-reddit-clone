@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap'
 
 class AddView extends Component {
+  state = {
+    activity: this.props.activity || 'adding'
+  }
+
   handleSubmit = (event) => {
     event.preventDefault()
-    this.setState({ time: Date.now() }, () => {
-      console.log('this.state', this.state)
-    })
+    this.setState({ time: Date.now() })
   }
+  
   render() {
     return (
       <Row>
