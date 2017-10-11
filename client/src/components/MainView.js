@@ -20,7 +20,7 @@ class MainView extends Component {
 	        <Route exact path='/posts/:post' render={({ match }) => (
             <PostDetail postId={match.params.post} />
           )}/>
-          <Route exact path='/posts/edit/:post' render={({ match }) => (
+          <Route exact path='/posts/:post/edit' render={({ match }) => (
             <AddView
               postId={match.params.post}
               title='title placeholder'

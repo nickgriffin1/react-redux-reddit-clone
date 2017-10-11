@@ -9,7 +9,8 @@ class AddView extends Component {
     categories: ['React', 'Redux', 'Udacity'],
     title: this.props.title || '',
     body: this.props.body || '',
-    author: this.props.author || ''
+    author: this.props.author || '',
+    category: this.props.category || ''
   }
 
   handleSubmit = (event) => {
@@ -19,7 +20,7 @@ class AddView extends Component {
     // dispatch addPost if all posts are populated
     const { title, body, author, category, time } = this.state
     if (title !== undefined && body !== undefined && author !== undefined && category !== undefined) {
-      // set the time and id in state
+      // set the time and id in state and call action and change route in callback
       this.setState({
         time: Date.now(),
         postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
@@ -47,13 +48,11 @@ class AddView extends Component {
   }
 
   render() {
-    console.log('this.props', this.props)
-    console.log('this.state', this.state)
     return (
       <Row>
         <Col sm={12} lg={8} lgOffset={2}>
           <div className='add-view-container'>
-            <h1>Add a new post</h1>
+            <h1>Add/Edit a post</h1>
             <Form>
               <FormGroup>
                 <ControlLabel>Title</ControlLabel>
@@ -61,6 +60,7 @@ class AddView extends Component {
                   type='text'
                   className='add-form-text-box'
                   onChange={this.handleSetTitle}
+                  value={this.state.title}
                 />
               </FormGroup>
 
@@ -70,6 +70,7 @@ class AddView extends Component {
                   type='text'
                   className='add-form-text-box'
                   onChange={this.handleSetBody}
+                  value={this.state.body}
                 />
               </FormGroup>
 
@@ -80,6 +81,7 @@ class AddView extends Component {
                   type='text'
                   className='add-form-text-box'
                   onChange={this.handleSetAuthor}
+                  value={this.state.author}
                 />
               </FormGroup>
 
@@ -89,6 +91,7 @@ class AddView extends Component {
                     className='add-form-select-button'
                     title={this.state.category || 'Category'}
                     id='categoryDropdown'
+                    value={this.state.category}
                     onSelect={this.handleSelectCategory}
                   >
                     <MenuItem disabled>Category</MenuItem>

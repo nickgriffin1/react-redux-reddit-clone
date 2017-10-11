@@ -19,13 +19,27 @@ export function getPost(id) {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/post/` + id, { headers: headers })
+  return fetch(`http://` + url + `:` + port + `/posts/` + id, { headers: headers })
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
       console.log("Error in fetchPost", e)
     })
 }
+
+export function getPostComments(id) {
+  const headers = {
+    'method': 'GET',
+    'Authorization': 'the answer is 42'
+  }
+  return fetch(`http://` + url + `:` + port + `/posts/` + id + `/comments`, { headers: headers })
+    .then((res) => res.json())
+    .then((posts) => { return posts })
+    .catch((e) => {
+      console.log("Error in fetchPost", e)
+    })
+}
+
 
 export function votePost(id, type) {
   const headers = {

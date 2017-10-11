@@ -3,6 +3,7 @@ import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { getPosts } from '../utils/api'
 import Post from '../components/Post'
+import { captialize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
@@ -29,15 +30,6 @@ class ListView extends Component {
         this.filterPosts('category', this.props.filter)
       }
     })
-  }
-
-  formatDate = (ts) => {
-    const date = new Date(ts)
-    return  date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear()
-  }
-
-  capitalize = (word) => {
-    return word.slice(0, 1).toUpperCase() + word.slice(1)
   }
 
   filterPosts = (sorter, category) => {
@@ -92,7 +84,7 @@ class ListView extends Component {
             body={post.body}
             category={post.category}
             score={post.voteScore}
-            date={this.formatDate(post.timestamp)}
+            date={formatDate(post.timestamp)}
           />
         ))}
       </Grid>
