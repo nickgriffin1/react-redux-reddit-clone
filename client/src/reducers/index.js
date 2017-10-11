@@ -1,15 +1,25 @@
 import { combineReducers } from 'redux'
-
 import {
   ADD_POST,
 } from '../actions'
 
-function mainView(state = {}, action) {
+function addView(state = {}, action) {
+  console.log('action', action)
   switch (action.type) {
-    case 'ADD_POST' :
+    case ADD_POST :
       return {
         ...state,
-        action
+        posts: [
+          ...state.posts,
+          {
+            id: action.postId,
+            title: action.title,
+            body: action.body,
+            author: action.author,
+            category: action.category,
+            time: action.time
+          }
+        ]
       }
     default :
       return state
@@ -17,5 +27,5 @@ function mainView(state = {}, action) {
 }
 
 export default combineReducers({
-  mainView
+  addView,
 })

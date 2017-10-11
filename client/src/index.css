@@ -136,3 +136,35 @@ a:focus {
 .add-form-text-box {
   margin-bottom: 3rem;
 }
+
+.add-form-select-button {
+  width: 10rem;
+  margin-left: 3rem;
+}
+
+.add-form-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.add-form-submit {
+  margin-left: 3rem;
+}
+
+/* Post Detail View */
+.post-detail {
+  padding: 2rem;
+  background-color: #272822;
+}
+
+.post-comments {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #272822;
+}

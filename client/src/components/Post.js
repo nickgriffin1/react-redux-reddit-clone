@@ -1,47 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, Glyphicon } from 'react-bootstrap'
-import { votePost } from '../utils/api'
+import Score from './Score'
 
 class Post extends React.Component {
-  state = {
-    score: this.props.score
-  }
-
-  changeScore = (changeInScore) => {
-    // so each user only has one vote
-    const newScore = this.state.score + changeInScore
-    const maxScore = this.props.score + 1
-    const minScore = this.props.score - 1
-    // make sure score is in bounds
-    if (newScore <= maxScore && newScore >= minScore) {
-      // set local state for UI
-      this.setState((prevState) => {
-        return { score: prevState.score + changeInScore }
-      })
-      // call api to set votes
-      const type = changeInScore === 1 ? 'upVote' : 'downVote'
-      votePost(this.props.id, type)
-    }
-  }
-
   render() {
     return (
       <Row className='post-container'>
         <Col xs={1} md={1} lg={1}>
-          <Row>
-            <Col xs={12} onClick={() => this.changeScore(1)}>
-              <Glyphicon className='post-arrow' glyph='menu-up' />
-            </Col>
-
-            <Col xs={12}>
-              <h3 className='post-score'>{this.state.score}</h3>
-            </Col>
-
-            <Col xs={12} onClick={() => this.changeScore(-1)}>
-              <Glyphicon className='post-arrow' glyph='menu-down' />
-            </Col>
-          </Row>
+          <Score score={this.props.score} />
         </Col>
         <Col xs={8} md={8} lg={8}>
           <Link to={'/posts/' + this.props.id}>

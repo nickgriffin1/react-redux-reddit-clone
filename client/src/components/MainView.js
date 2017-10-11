@@ -17,7 +17,18 @@ class MainView extends Component {
 	        	<ListView filter={match.params.category} />
 	        )}/>
 	        <Route exact path='/add' component={AddView} />
-	        <Route exact path='/posts/:post' component={PostDetail} />
+	        <Route exact path='/posts/:post' render={({ match }) => (
+            <PostDetail postId={match.params.post} />
+          )}/>
+          <Route exact path='/posts/edit/:post' render={({ match }) => (
+            <AddView
+              postId={match.params.post}
+              title='title placeholder'
+              body='body placeholder'
+              author='author placeholder'
+              category='React'
+            />
+          )}/>
 	        <Route component={NotFoundView} />
 	      </Switch>
 	    </div>

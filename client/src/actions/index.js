@@ -1,8 +1,13 @@
 export const ADD_POST = 'ADD_POST'
 
-export function addPost ({ posts }) {
+export function addPost ({ postId, title, body, author, category, time }) {
   return {
     type: ADD_POST,
-    posts
+    postId,
+    title,
+    body,
+    author,
+    category,
+    time
   }
 }

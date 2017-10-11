@@ -75,7 +75,7 @@ class ListView extends Component {
           </Col>
         </Row>
 
-        {this.props.filter && 
+        {this.props.filter &&
           <Row className='post-container'>
             <Col xs={12}>
               <h1>{this.capitalize(this.props.filter)}</h1>

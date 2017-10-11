@@ -1,17 +1,54 @@
 import React, { Component } from 'react'
-import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem } from 'react-bootstrap'
+import { addPost } from '../actions'
 
 class AddView extends Component {
   state = {
-    activity: this.props.activity || 'adding'
+    activity: this.props.activity || 'adding',
+    categories: ['React', 'Redux', 'Udacity'],
+    title: this.props.title || '',
+    body: this.props.body || '',
+    author: this.props.author || ''
   }
 
   handleSubmit = (event) => {
+    // stop default serialization
     event.preventDefault()
-    this.setState({ time: Date.now() })
+
+    // dispatch addPost if all posts are populated
+    const { title, body, author, category, time } = this.state
+    if (title !== undefined && body !== undefined && author !== undefined && category !== undefined) {
+      // set the time and id in state
+      this.setState({
+        time: Date.now(),
+        postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+      }, () => {
+        this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
+        this.props.history.push('/posts/' + this.state.postId)
+      })
+    }
   }
-  
+
+  handleSetTitle = (event) => {
+    this.setState({ title: event.target.value })
+  }
+
+  handleSetBody = (event) => {
+    this.setState({ body: event.target.value })
+  }
+
+  handleSetAuthor = (event) => {
+    this.setState({ author: event.target.value })
+  }
+
+  handleSelectCategory = (event) => {
+    this.setState({ category: event })
+  }
+
   render() {
+    console.log('this.props', this.props)
+    console.log('this.state', this.state)
     return (
       <Row>
         <Col sm={12} lg={8} lgOffset={2}>
@@ -23,7 +60,7 @@ class AddView extends Component {
                 <FormControl
                   type='text'
                   className='add-form-text-box'
-                  onChange={(e) => this.setState({ title: e.target.value})}
+                  onChange={this.handleSetTitle}
                 />
               </FormGroup>
 
@@ -32,38 +69,55 @@ class AddView extends Component {
                 <FormControl
                   type='text'
                   className='add-form-text-box'
-                  onChange={(e) => this.setState({ body: e.target.value})}
+                  onChange={this.handleSetBody}
                 />
               </FormGroup>
 
+              {/* Yes I know author should be automatic but I don't have time for that*/}
               <FormGroup>
                 <ControlLabel>Author</ControlLabel>
                 <FormControl
                   type='text'
                   className='add-form-text-box'
-                  onChange={(e) => this.setState({ author: e.target.value})}
+                  onChange={this.handleSetAuthor}
                 />
               </FormGroup>
 
-              <FormGroup>
-                <ControlLabel>Category</ControlLabel>
-                <FormControl
-                  type='text'
-                  className='add-form-text-box'
-                  onChange={(e) => this.setState({ category: e.target.value})}
-                />
-              </FormGroup>
-              
-              <Button
-                onClick={(e) => this.handleSubmit(e)}
-                type='submit'
-              >Submit</Button>
+              <div className='add-form-bottom'>
+                <FormGroup>
+                  <DropdownButton
+                    className='add-form-select-button'
+                    title={this.state.category || 'Category'}
+                    id='categoryDropdown'
+                    onSelect={this.handleSelectCategory}
+                  >
+                    <MenuItem disabled>Category</MenuItem>
+                    <MenuItem divider />
+                    {this.state.categories.map((category, index) => (
+                      <MenuItem key={category} eventKey={category}>{category}</MenuItem>
+                    ))}
+                  </DropdownButton>
+                </FormGroup>
+
+                <Button
+                  className='add-form-submit'
+                  onClick={(e) => this.handleSubmit(e)}
+                  type='submit'
+                >Submit</Button>
+              </div>
             </Form>
           </div>
         </Col>
       </Row>
-    );
+    )
   }
 }
 
-export default AddView
+const mapDispatchToProps = dispatch => ({
+  addPost: (post) => dispatch(addPost(post)),
+})
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(AddView)

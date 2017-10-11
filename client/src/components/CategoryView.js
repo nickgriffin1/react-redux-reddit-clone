@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap'
 import { getCategories } from '../utils/api'
@@ -13,7 +14,7 @@ class CategoryView extends Component {
       this.setState({ ...categories })
     })
   }
-  
+
   render() {
     return (
       <Grid>
@@ -43,4 +44,8 @@ class CategoryView extends Component {
   }
 }
 
-export default CategoryView
+const mapStateToProps = state => ({
+  categories: state.categories
+})
+
+export default connect(mapStateToProps)(CategoryView)
