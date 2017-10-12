@@ -23,6 +23,11 @@ class SmredditNavbar extends Component {
     ],
     route: '/'
   }
+
+  componentDidUpdate() {
+    console.log()
+  }
+
   render() {
     return (
       <Navbar inverse collapseOnSelect>
@@ -33,7 +38,7 @@ class SmredditNavbar extends Component {
                 className={this.state.route === item.route ? 'navbar-link nav-item-active' : 'navbar-link'}
                 to={item.route}
                 onClick={() => this.setState({ route: item.route })}
-              > 
+              >
                 <Glyphicon glyph={item.glyph} /> {item.name}
               </NavLink>
           ))}

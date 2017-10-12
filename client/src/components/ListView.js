@@ -3,7 +3,7 @@ import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { getPosts } from '../utils/api'
 import Post from '../components/Post'
-import { captialize, formatDate } from '../utils/shared'
+import { capitalize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
@@ -70,7 +70,7 @@ class ListView extends Component {
         {this.props.filter &&
           <Row className='post-container'>
             <Col xs={12}>
-              <h1>{this.capitalize(this.props.filter)}</h1>
+              <h1>{capitalize(this.props.filter)}</h1>
             </Col>
           </Row>
         }

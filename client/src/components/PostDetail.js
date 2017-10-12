@@ -8,7 +8,8 @@ import { capitalize, formatDate } from '../utils/shared'
 class PostDetail extends React.Component {
   state = {
     numComments: 0,
-    showComments: true
+    showComments: true,
+    commenting: false
   }
 
   componentDidMount() {
@@ -32,11 +33,15 @@ class PostDetail extends React.Component {
     })
   }
 
+  handleSubmitComment = () => {
+    console.log(this.state.newComment)
+  }
+
   render() {
     console.log('this.state.comments', this.state.comments)
     return (
       <Row>
-        <Col xs={12} lg={8} lgOffset={2} className='post-detail'>
+        <Col xs={12} lg={10} lgOffset={1} className='post-detail'>
           <Row>
             <Col xs={1}>
               <Score score={this.state.score || 0} />
@@ -63,8 +68,24 @@ class PostDetail extends React.Component {
             </Col>
           </Row>
         </Col>
-        <Col xs={12} lg={8} lgOffset={2} className='post-comments'>
+        <Col xs={12} lg={10} lgOffset={1} className='post-comments'>
           <Row>
+            <Col xs={10} xsOffset={1}>
+              {this.state.commenting === true ?
+                <Row>
+                  <Col xs={10}>
+                    <input type="text" value={this.state.newComment} style={{ width: '100%'}}/>
+                  </Col>
+                  <Col xs={2}>
+                    <Button onClick={this.handleSubmitComment}>Submit</Button>
+                  </Col>
+                </Row>:
+                <Button onClick={() => this.setState({ commenting: true })}>
+                  <Glyphicon glyph='plus' /> Add a Comment
+                </Button>
+              }
+              <hr />
+            </Col>
             <Col xs={10} xsOffset={1}>
               <Row>
                 <Col xs={10}>

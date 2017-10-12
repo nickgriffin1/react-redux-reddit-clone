@@ -1,33 +1,64 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap'
 import { addPost } from '../actions'
+import { getPost, getCategories } from '../utils/api'
+import { capitalize } from '../utils/shared'
 
 class AddView extends Component {
   state = {
-    activity: this.props.activity || 'adding',
-    categories: ['React', 'Redux', 'Udacity'],
-    title: this.props.title || '',
-    body: this.props.body || '',
-    author: this.props.author || '',
-    category: this.props.category || ''
+    categories: [],
+    title: '',
+    body: '',
+    author: '',
+    category: '',
+    done: false
   }
 
-  handleSubmit = (event) => {
+  componentDidMount() {
+    Promise.resolve(getCategories()).then((data) => {
+      this.setState({ categories: data.categories })
+    })
+
+    if (this.props.mode === 'editing') {
+      Promise.resolve(getPost(this.props.postId)).then((post) => {
+        this.setState({
+          postId: post.id,
+          title: post.title,
+          body: post.body,
+          author: post.author,
+          category: capitalize(post.category),
+        })
+      })
+    }
+  }
+
+  handleFormSubmit = (event) => {
     // stop default serialization
     event.preventDefault()
 
     // dispatch addPost if all posts are populated
     const { title, body, author, category, time } = this.state
-    if (title !== undefined && body !== undefined && author !== undefined && category !== undefined) {
+    if (title.length > 0 && body.length > 0 && author.length > 0 && category.length > 0) {
       // set the time and id in state and call action and change route in callback
-      this.setState({
-        time: Date.now(),
-        postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
-      }, () => {
-        this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
-        this.props.history.push('/posts/' + this.state.postId)
-      })
+      if (this.state.mode === 'editing') {
+        this.setState({
+          time: Date.now()
+        }, () => {
+          this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
+          this.props.history.push('/posts/' + this.state.postId)
+        })
+      } else {
+        this.setState({
+          time: Date.now(),
+          postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+        }, () => {
+          this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
+          this.setState({ done: true })
+        })
+      }
+    } else {
+      // TODO handle show error here
     }
   }
 
@@ -97,16 +128,21 @@ class AddView extends Component {
                     <MenuItem disabled>Category</MenuItem>
                     <MenuItem divider />
                     {this.state.categories.map((category, index) => (
-                      <MenuItem key={category} eventKey={category}>{category}</MenuItem>
+                      <MenuItem key={category.name} eventKey={category.name}>{category.name}</MenuItem>
                     ))}
                   </DropdownButton>
                 </FormGroup>
 
-                <Button
-                  className='add-form-submit'
-                  onClick={(e) => this.handleSubmit(e)}
-                  type='submit'
-                >Submit</Button>
+                {this.state.done === true ?
+                  <Button className='add-form-submit' disabled>
+                    <Glyphicon glyph='ok' /> Finished
+                  </Button> :
+                  <Button
+                    className='add-form-submit'
+                    onClick={(e) => this.handleFormSubmit(e)}
+                    type='submit'
+                  >Submit</Button>
+                }
               </div>
             </Form>
           </div>

@@ -10,8 +10,8 @@ class CategoryView extends Component {
   }
 
   componentDidMount() {
-    Promise.resolve(getCategories()).then((categories) => {
-      this.setState({ ...categories })
+    Promise.resolve(getCategories()).then((data) => {
+      this.setState({ categories: data.categories })
     })
   }
 

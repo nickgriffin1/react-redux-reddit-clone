@@ -23,10 +23,7 @@ class MainView extends Component {
           <Route exact path='/posts/:post/edit' render={({ match }) => (
             <AddView
               postId={match.params.post}
-              title='title placeholder'
-              body='body placeholder'
-              author='author placeholder'
-              category='React'
+              mode='editing'
             />
           )}/>
 	        <Route component={NotFoundView} />
