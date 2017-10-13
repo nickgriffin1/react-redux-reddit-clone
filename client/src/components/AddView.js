@@ -30,6 +30,14 @@ class AddView extends Component {
           category: capitalize(post.category),
         })
       })
+    } else {
+      this.setState({
+        postId: '',
+        title: '',
+        body: '',
+        author: '',
+        category: '',
+      })
     }
   }
 
@@ -41,22 +49,13 @@ class AddView extends Component {
     const { title, body, author, category, time } = this.state
     if (title.length > 0 && body.length > 0 && author.length > 0 && category.length > 0) {
       // set the time and id in state and call action and change route in callback
-      if (this.state.mode === 'editing') {
-        this.setState({
-          time: Date.now()
-        }, () => {
-          this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
-          this.props.history.push('/posts/' + this.state.postId)
-        })
-      } else {
-        this.setState({
-          time: Date.now(),
-          postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
-        }, () => {
-          this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
-          this.setState({ done: true })
-        })
-      }
+      this.setState({
+        time: Date.now(),
+        postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+      }, () => {
+        this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
+        this.setState({ done: true })
+      })
     } else {
       // TODO handle show error here
     }
@@ -134,14 +133,19 @@ class AddView extends Component {
                 </FormGroup>
 
                 {this.state.done === true ?
-                  <Button className='add-form-submit' disabled>
+                  <Button bsStyle='success' className='add-form-submit'>
                     <Glyphicon glyph='ok' /> Finished
                   </Button> :
                   <Button
+                    bsStyle='primary'
                     className='add-form-submit'
                     onClick={(e) => this.handleFormSubmit(e)}
                     type='submit'
                   >Submit</Button>
+                }
+
+                {this.props.mode === 'editing' &&
+                  <Button bsStyle='danger'>Delete</Button>
                 }
               </div>
             </Form>

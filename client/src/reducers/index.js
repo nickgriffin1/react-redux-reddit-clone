@@ -1,18 +1,19 @@
 import { combineReducers } from 'redux'
 import {
   ADD_POST,
+  DELETE_POST
 } from '../actions'
 
-function addView(state = {}, action) {
+function posts(state = {}, action) {
   console.log('action', action)
   switch (action.type) {
-    case ADD_POST :
+    case ADD_POST:
       return {
         ...state,
         posts: [
           ...state.posts,
           {
-            id: action.postId,
+            postId: action.postId,
             title: action.title,
             body: action.body,
             author: action.author,
@@ -21,11 +22,36 @@ function addView(state = {}, action) {
           }
         ]
       }
-    default :
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter((post) => {
+          return post.postId !== action.postId
+        })
+      }
+    default:
+      return state
+  }
+}
+
+function categories(state = {}, action) {
+  // TODO create functionality for creating categories
+  switch(action.type) {
+    default:
+      return state
+  }
+}
+
+function users(state = {}, action) {
+  // TODO create functionality for users
+  switch(action.type) {
+    default:
       return state
   }
 }
 
 export default combineReducers({
-  addView,
+  posts,
+  categories,
+  users
 })
