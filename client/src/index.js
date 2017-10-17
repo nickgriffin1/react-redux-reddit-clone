@@ -4,11 +4,11 @@ import { Route } from 'react-router'
 import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 import './index.css'
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import reducers from './reducers'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux'
 
 const history = createHistory()
 
@@ -26,10 +26,7 @@ const middleware = routerMiddleware(history, logger)
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
-  combineReducers({
-    ...reducers,
-    router: routerReducer
-  }),
+  reducers,
   composeEnhancers(
     applyMiddleware(middleware)
   )

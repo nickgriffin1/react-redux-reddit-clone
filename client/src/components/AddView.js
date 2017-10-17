@@ -77,10 +77,15 @@ class AddView extends Component {
     this.setState({ category: event })
   }
 
+  deletePost = () => {
+    // TODO not yet implemented
+    console.log('fix me')
+  }
+
   render() {
     return (
       <Row>
-        <Col sm={12} lg={8} lgOffset={2}>
+        <Col sm={12} lg={10} lgOffset={1}>
           <div className='add-view-container'>
             <h1>Add/Edit a post</h1>
             <Form>
@@ -104,7 +109,7 @@ class AddView extends Component {
                 />
               </FormGroup>
 
-              {/* Yes I know author should be automatic but I don't have time for that*/}
+              {/* Yes I know author should be automatic but user functionality isn't implemented*/}
               <FormGroup>
                 <ControlLabel>Author</ControlLabel>
                 <FormControl
@@ -145,7 +150,7 @@ class AddView extends Component {
                 }
 
                 {this.props.mode === 'editing' &&
-                  <Button bsStyle='danger'>Delete</Button>
+                  <Button bsStyle='danger' onClick={this.deletePost}>Delete</Button>
                 }
               </div>
             </Form>

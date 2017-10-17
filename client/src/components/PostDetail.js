@@ -33,8 +33,57 @@ class PostDetail extends React.Component {
     })
   }
 
+  deletePost = () => {
+    // TODO handle delete post
+    console.log('havent yet implemented this')
+  }
+
   handleSubmitComment = () => {
     console.log(this.state.newComment)
+  }
+
+  deleteComment = (commentId) => {
+    const newComments = Object.assign([], this.state.comments)
+    const editedNewComments = newComments.filter((comment) => commentId !== comment.id)
+    this.setState({
+      comments: editedNewComments,
+      numComments: editedNewComments.length
+    })
+    // TODO dispatch DELETE_COMMENT
+  }
+
+  initializeEditComment = (commentId) => {
+    this.updateCommentUtil(commentId, 'editing', true)
+  }
+
+  updateComment = (commentId, newValue) => {
+    this.updateCommentUtil(commentId, 'body', newValue, true)
+  }
+
+  cancelUpdateComment = (commentId) => {
+    this.updateCommentUtil(commentId, null, null, true)
+  }
+
+  handleCommentChange = (event, commentId) => {
+    this.updateCommentUtil(commentId, 'temporaryBody', event.target.value)
+  }
+
+  updateCommentUtil = (commentId, selector, newValue, finished) => {
+    // create new object so that original isn't directly edited
+    const newComments = Object.assign([], this.state.comments)
+    // divide the comment to edit from all other comments
+    const updatedComments = newComments.filter((comment) => commentId === comment.id)
+    const otherComments = newComments.filter((comment) => commentId !== comment.id)
+    // edit the property
+    updatedComments[0][selector] = newValue
+    // set to finished if needed
+    if (finished) {
+      updatedComments[0].editing = false
+    }
+    // add all other comments
+    updatedComments.push(...otherComments)
+    // of course update state
+    this.setState({ comments: updatedComments })
   }
 
   render() {
@@ -48,17 +97,22 @@ class PostDetail extends React.Component {
             </Col>
             <Col xs={11}>
               <Row>
-                <Col xs={10}>
+                <Col xs={9}>
                   <h3 className='post-detail-title'>{this.state.title}</h3>
                 </Col>
-                <Col xs={2}>
+                <Col xs={3}>
                   <Link to={'/posts/' + this.props.postId + '/edit/'}>
-                    <Button>
+                    <Button style={{ marginRight: '3rem'}}>
                       <h5>
                         <Glyphicon glyph='pencil' /> Edit
                       </h5>
                     </Button>
                   </Link>
+                  <Button bsStyle='danger' onClick={this.deletePost}>
+                    <h5>
+                      <Glyphicon glyph='remove' /> Delete
+                    </h5>
+                  </Button>
                 </Col>
               </Row>
               <h4 className='post-detail-body'>{this.state.body}</h4>
@@ -80,7 +134,7 @@ class PostDetail extends React.Component {
                     <Button onClick={this.handleSubmitComment}>Submit</Button>
                   </Col>
                 </Row>:
-                <Button onClick={() => this.setState({ commenting: true })}>
+                <Button bsStyle='primary' onClick={() => this.setState({ commenting: true })}>
                   <Glyphicon glyph='plus' /> Add a Comment
                 </Button>
               }
@@ -109,10 +163,49 @@ class PostDetail extends React.Component {
                 </Col>
               </Row>
               {this.state.comments && this.state.showComments && this.state.comments.map((comment, index) => (
-                <div key={index}>
+                <div key={comment.id}>
                   <hr />
-                  <p className='post-detail-comment'>{comment.body}</p>
-                  <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                  <Row>
+                    <Col xs={10}>
+                      {comment.editing === true ?
+                        <div>
+                          <input
+                            type='text'
+                            style={{ color: 'black', width: '70%', marginRight: '1rem' }}
+                            value={comment.temporaryBody || comment.body}
+                            onChange={(event) => this.handleCommentChange(event, comment.id)}
+                          />
+                          <Button
+                            type='submit'
+                            bsStyle='success'
+                            onClick={() => this.updateComment(comment.id, comment.temporaryBody)}
+                          >Submit</Button>
+                          <Button
+                            type='submit'
+                            bsStyle='warning'
+                            style={{ marginLeft: '1rem' }}
+                            onClick={() => this.cancelUpdateComment(comment.id)}
+                          >Cancel</Button>
+                        </div>:
+                        <p className='post-detail-comment'>{comment.body}</p>
+                      }
+                      <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                    </Col>
+                    <Col xs={2}>
+                      {comment.editing ?
+                        <Button
+                          style={{ float: 'left' }}
+                          bsStyle='danger'
+                          onClick={() => this.deleteComment(comment.id)}
+                        >Delete</Button> :
+                        <Button
+                          style={{ float: 'right' }}
+                          bsStyle='primary'
+                          onClick={() => this.initializeEditComment(comment.id)}
+                        >Edit</Button>
+                      }
+                    </Col>
+                  </Row>
                 </div>
               ))}
             </Col>

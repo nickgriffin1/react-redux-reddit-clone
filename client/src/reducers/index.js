@@ -1,11 +1,26 @@
 import { combineReducers } from 'redux'
+import { routerReducer } from 'react-router-redux'
 import {
+  getPosts,
+  getCategories
+} from '../utils/api'
+import {
+  GET_POSTS,
   ADD_POST,
-  DELETE_POST
+  DELETE_POST,
+  VOTE_POST,
+
+  GET_CATEGORIES,
+
+  GET_COMMENTS,
+  ADD_COMMENT,
 } from '../actions'
 
-function posts(state = {}, action) {
-  console.log('action', action)
+//set intial post state to the posts retrieved from server
+var initialPostsState = {}
+getPosts().then((posts) => { initialPostsState = posts })
+
+function posts(state = initialPostsState, action) {
   switch (action.type) {
     case ADD_POST:
       return {
@@ -34,16 +49,46 @@ function posts(state = {}, action) {
   }
 }
 
-function categories(state = {}, action) {
-  // TODO create functionality for creating categories
+//set intial categories state to the posts retrieved from server
+var initialCommentsState = {}
+//getAllComments().then((comments) => { initialCommentsState = comments })
+
+function comments(state = initialCommentsState, action) {
   switch(action.type) {
+    case GET_COMMENTS:
+      return {
+        
+      }
+    case ADD_COMMENT:
+      return {
+        ...state,
+        comments: [
+          ...state.comments,
+          action.comment
+        ]
+      }
     default:
       return state
   }
 }
 
-function users(state = {}, action) {
-  // TODO create functionality for users
+//set intial categories state to the posts retrieved from server
+var initialCategoriesState = {}
+getCategories().then((categories) => { initialCategoriesState = categories })
+
+function categories(state = initialCategoriesState, action) {
+  // TODO create functionality for creating categories
+  switch(action.type) {
+    case GET_CATEGORIES:
+      return action.categories.map((category) => (category.name))
+    default:
+      return state
+  }
+}
+
+// TODO create functionality for users
+var initialUsersState = {}
+function users(state = initialUsersState, action) {
   switch(action.type) {
     default:
       return state
@@ -52,6 +97,8 @@ function users(state = {}, action) {
 
 export default combineReducers({
   posts,
+  comments,
   categories,
-  users
+  users,
+  router: routerReducer
 })
