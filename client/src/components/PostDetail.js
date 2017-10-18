@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import Score from './Score'
@@ -33,39 +34,27 @@ class PostDetail extends React.Component {
     })
   }
 
-  deletePost = () => {
-    // TODO handle delete post
-    console.log('havent yet implemented this')
+  submitNewComment = () => {
+    const newComment = {
+      id: '123',
+      parentId: '456',
+      timestamp: Date.now(),
+      body: this.state.newCommentBody,
+      author: 'you',
+      voteScore: 0
+    }
+    const comments = Object.assign([], this.state.comments)
+    comments.push(newComment)
+    this.setState((prevState) => ({
+      comments,
+      commenting: false,
+      numComments: prevState.numComments + 1
+    }))
+    // dispatch ADD_COMMENT
   }
 
-  handleSubmitComment = () => {
-    console.log(this.state.newComment)
-  }
-
-  deleteComment = (commentId) => {
-    const newComments = Object.assign([], this.state.comments)
-    const editedNewComments = newComments.filter((comment) => commentId !== comment.id)
-    this.setState({
-      comments: editedNewComments,
-      numComments: editedNewComments.length
-    })
-    // TODO dispatch DELETE_COMMENT
-  }
-
-  initializeEditComment = (commentId) => {
-    this.updateCommentUtil(commentId, 'editing', true)
-  }
-
-  updateComment = (commentId, newValue) => {
-    this.updateCommentUtil(commentId, 'body', newValue, true)
-  }
-
-  cancelUpdateComment = (commentId) => {
-    this.updateCommentUtil(commentId, null, null, true)
-  }
-
-  handleCommentChange = (event, commentId) => {
-    this.updateCommentUtil(commentId, 'temporaryBody', event.target.value)
+  cancelNewComment = () => {
+    this.setState({ commenting: false })
   }
 
   updateCommentUtil = (commentId, selector, newValue, finished) => {
@@ -86,8 +75,47 @@ class PostDetail extends React.Component {
     this.setState({ comments: updatedComments })
   }
 
+  deleteComment = (commentId) => {
+    this.updateCommentUtil(commentId, 'deleted', true, true)
+    // also need to update comment amount
+    this.setState((prevState) => ({
+      numComments: prevState.numComments - 1
+    }))
+    // TODO dispatch DELETE_COMMENT
+  }
+
+  initializeEditComment = (commentId) => {
+    this.updateCommentUtil(commentId, 'editing', true)
+  }
+
+  updateComment = (commentId, newValue) => {
+    this.updateCommentUtil(commentId, 'body', newValue, true)
+    // TODO dispatch EDIT_COMMENT
+  }
+
+  cancelUpdateComment = (commentId) => {
+    this.updateCommentUtil(commentId, null, null, true)
+  }
+
+  handleCommentChange = (event, commentId) => {
+    this.updateCommentUtil(commentId, 'temporaryBody', event.target.value)
+  }
+
+  voteComment = (type, commentId, score, hasVoted) => {
+    if (!hasVoted) {
+      var newScore
+      if (type === 'up') {
+        newScore = score + 1
+      } else if (type === 'down') {
+        newScore = score - 1
+      }
+      this.updateCommentUtil(commentId, 'voteScore', newScore)
+      this.updateCommentUtil(commentId, 'hasVoted', true)
+    }
+  }
+
   render() {
-    console.log('this.state.comments', this.state.comments)
+    console.log('this.props', this.props)
     return (
       <Row>
         <Col xs={12} lg={10} lgOffset={1} className='post-detail'>
@@ -100,25 +128,20 @@ class PostDetail extends React.Component {
                 <Col xs={9}>
                   <h3 className='post-detail-title'>{this.state.title}</h3>
                 </Col>
-                <Col xs={3}>
+                <Col xs={2}>
                   <Link to={'/posts/' + this.props.postId + '/edit/'}>
-                    <Button style={{ marginRight: '3rem'}}>
+                    <Button style={{ float: 'right'}}>
                       <h5>
                         <Glyphicon glyph='pencil' /> Edit
                       </h5>
                     </Button>
                   </Link>
-                  <Button bsStyle='danger' onClick={this.deletePost}>
-                    <h5>
-                      <Glyphicon glyph='remove' /> Delete
-                    </h5>
-                  </Button>
                 </Col>
               </Row>
               <h4 className='post-detail-body'>{this.state.body}</h4>
               <h4 className='post-detail-author'><Glyphicon glyph='user' /> {this.state.author}</h4>
               <h4 className='post-detail-category'><Glyphicon glyph='list' /> {this.state.category}</h4>
-              <h4 className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(this.state.date)}</h4>
+              <h4 className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(this.state.date, true)}</h4>
             </Col>
           </Row>
         </Col>
@@ -128,10 +151,19 @@ class PostDetail extends React.Component {
               {this.state.commenting === true ?
                 <Row>
                   <Col xs={10}>
-                    <input type="text" value={this.state.newComment} style={{ width: '100%'}}/>
+                    <input
+                      type='text'
+                      style={{ width: '100%', color: 'black' }}
+                      onChange={(event) => this.setState({ newCommentBody: event.target.value })}
+                    />
                   </Col>
                   <Col xs={2}>
-                    <Button onClick={this.handleSubmitComment}>Submit</Button>
+                    <Button
+                      bsStyle='success'
+                      style={{ marginRight: '1rem' }}
+                      onClick={this.submitNewComment}
+                    >Submit</Button>
+                    <Button bsStyle='warning' onClick={this.cancelNewComment}>Cancel</Button>
                   </Col>
                 </Row>:
                 <Button bsStyle='primary' onClick={() => this.setState({ commenting: true })}>
@@ -189,7 +221,29 @@ class PostDetail extends React.Component {
                         </div>:
                         <p className='post-detail-comment'>{comment.body}</p>
                       }
-                      <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                      <Row>
+                        <Col xs={3}>
+                          <p>
+                            <span>{comment.voteScore} </span>
+                            <span><Glyphicon
+                                glyph='plus'
+                                style={{ color: 'green' }}
+                                onClick={() => this.voteComment('up', comment.id, comment.voteScore, comment.hasVoted)}
+                              /> </span>
+                            <Glyphicon
+                              glyph='minus'
+                              style={{ color: 'red' }}
+                              onClick={() => this.voteComment('down', comment.id, comment.voteScore, comment.hasVoted)}
+                            />
+                          </p>
+                        </Col>
+                        <Col xs={3}>
+                          <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                        </Col>
+                        <Col xs={3}>
+                          <p className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(comment.timestamp, true)}</p>
+                        </Col>
+                      </Row>
                     </Col>
                     <Col xs={2}>
                       {comment.editing ?
@@ -214,6 +268,10 @@ class PostDetail extends React.Component {
       </Row>
     )
   }
+}
+
+PostDetail.propTypes = {
+
 }
 
 export default PostDetail
