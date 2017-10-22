@@ -1,8 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import Score from './Score'
+import {
+  deleteComment,
+} from '../actions'
 import { getPost, getPostComments } from '../utils/api'
 import { capitalize, formatDate } from '../utils/shared'
 
@@ -27,6 +30,7 @@ class PostDetail extends React.Component {
 
     Promise.resolve(getPostComments(this.props.postId)).then((comments) => {
       console.log('comments', comments)
+      const commentsLen = comments.filter((comment) => comments.deleted === false).length
       this.setState({
         comments,
         numComments: comments.length
@@ -36,13 +40,19 @@ class PostDetail extends React.Component {
 
   submitNewComment = () => {
     const newComment = {
-      id: '123',
-      parentId: '456',
+      id: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2),
+      parentId: this.props.postId,
       timestamp: Date.now(),
       body: this.state.newCommentBody,
-      author: 'you',
-      voteScore: 0
+      // users not yet implemented
+      author: this.props.user || 'you',
+      voteScore: 0,
+      deleted: false
     }
+    console.log(
+      this.props
+    )
+    console.log(newComment)
     const comments = Object.assign([], this.state.comments)
     comments.push(newComment)
     this.setState((prevState) => ({
@@ -81,7 +91,8 @@ class PostDetail extends React.Component {
     this.setState((prevState) => ({
       numComments: prevState.numComments - 1
     }))
-    // TODO dispatch DELETE_COMMENT
+    console.log('this.props', this.props)
+    this.props.deleteComment({ commentId })
   }
 
   initializeEditComment = (commentId) => {
@@ -111,11 +122,11 @@ class PostDetail extends React.Component {
       }
       this.updateCommentUtil(commentId, 'voteScore', newScore)
       this.updateCommentUtil(commentId, 'hasVoted', true)
+      // TODO dispatch VOTE_COMMENT
     }
   }
 
   render() {
-    console.log('this.props', this.props)
     return (
       <Row>
         <Col xs={12} lg={10} lgOffset={1} className='post-detail'>
@@ -194,74 +205,79 @@ class PostDetail extends React.Component {
                   }
                 </Col>
               </Row>
-              {this.state.comments && this.state.showComments && this.state.comments.map((comment, index) => (
-                <div key={comment.id}>
-                  <hr />
-                  <Row>
-                    <Col xs={10}>
-                      {comment.editing === true ?
-                        <div>
-                          <input
-                            type='text'
-                            style={{ color: 'black', width: '70%', marginRight: '1rem' }}
-                            value={comment.temporaryBody || comment.body}
-                            onChange={(event) => this.handleCommentChange(event, comment.id)}
-                          />
-                          <Button
-                            type='submit'
-                            bsStyle='success'
-                            onClick={() => this.updateComment(comment.id, comment.temporaryBody)}
-                          >Submit</Button>
-                          <Button
-                            type='submit'
-                            bsStyle='warning'
-                            style={{ marginLeft: '1rem' }}
-                            onClick={() => this.cancelUpdateComment(comment.id)}
-                          >Cancel</Button>
-                        </div>:
-                        <p className='post-detail-comment'>{comment.body}</p>
-                      }
-                      <Row>
-                        <Col xs={3}>
-                          <p>
-                            <span>{comment.voteScore} </span>
-                            <span><Glyphicon
-                                glyph='plus'
-                                style={{ color: 'green' }}
-                                onClick={() => this.voteComment('up', comment.id, comment.voteScore, comment.hasVoted)}
-                              /> </span>
-                            <Glyphicon
-                              glyph='minus'
-                              style={{ color: 'red' }}
-                              onClick={() => this.voteComment('down', comment.id, comment.voteScore, comment.hasVoted)}
+              {this.state.comments && this.state.showComments && this.state.comments
+                .filter((comment) => comment.deleted === false)
+                .map((comment, index) => (
+                  <div key={comment.id}>
+                    <hr />
+                    <Row>
+                      <Col xs={10}>
+                        {comment.editing === true ?
+                          <div>
+                            <input
+                              type='text'
+                              style={{ color: 'black', width: '70%', marginRight: '1rem' }}
+                              value={comment.temporaryBody || comment.body}
+                              onChange={(event) => this.handleCommentChange(event, comment.id)}
                             />
-                          </p>
-                        </Col>
-                        <Col xs={3}>
-                          <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
-                        </Col>
-                        <Col xs={3}>
-                          <p className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(comment.timestamp, true)}</p>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col xs={2}>
-                      {comment.editing ?
-                        <Button
-                          style={{ float: 'left' }}
-                          bsStyle='danger'
-                          onClick={() => this.deleteComment(comment.id)}
-                        >Delete</Button> :
-                        <Button
-                          style={{ float: 'right' }}
-                          bsStyle='primary'
-                          onClick={() => this.initializeEditComment(comment.id)}
-                        >Edit</Button>
-                      }
-                    </Col>
-                  </Row>
-                </div>
-              ))}
+                            <Button
+                              type='submit'
+                              bsStyle='success'
+                              onClick={() => this.updateComment(comment.id, comment.temporaryBody)}
+                            >Submit</Button>
+                            <Button
+                              type='submit'
+                              bsStyle='warning'
+                              style={{ marginLeft: '1rem' }}
+                              onClick={() => this.cancelUpdateComment(comment.id)}
+                            >Cancel</Button>
+                          </div>:
+                          <p className='post-detail-comment'>{comment.body}</p>
+                        }
+                        <Row>
+                          <Col xs={3}>
+                            <p>
+                              <span>{comment.voteScore} </span>
+                              <span><Glyphicon
+                                  glyph='plus'
+                                  style={{ color: 'green' }}
+                                  className={comment.hasVoted ? 'disabled' : null}
+                                  onClick={() => this.voteComment('up', comment.id, comment.voteScore, comment.hasVoted)}
+                                /> </span>
+                              <Glyphicon
+                                glyph='minus'
+                                className={comment.hasVoted ? 'disabled' : null}
+                                style={{ color: 'red' }}
+                                onClick={() => this.voteComment('down', comment.id, comment.voteScore, comment.hasVoted)}
+                              />
+                            </p>
+                          </Col>
+                          <Col xs={3}>
+                            <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                          </Col>
+                          <Col xs={3}>
+                            <p className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(comment.timestamp, true)}</p>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col xs={2}>
+                        {comment.editing ?
+                          <Button
+                            style={{ float: 'left' }}
+                            bsStyle='danger'
+                            onClick={() => this.deleteComment(comment.id)}
+                          >Delete</Button> :
+                          <Button
+                            style={{ float: 'right' }}
+                            bsStyle='primary'
+                            onClick={() => this.initializeEditComment(comment.id)}
+                          >Edit</Button>
+                        }
+                      </Col>
+                    </Row>
+                  </div>
+                )
+              )}
             </Col>
           </Row>
         </Col>
@@ -270,8 +286,20 @@ class PostDetail extends React.Component {
   }
 }
 
-PostDetail.propTypes = {
-
+function mapStateToProps ({ posts, comments }) {
+  return {
+    posts,
+    comments,
+  }
 }
 
-export default PostDetail
+function mapDispatchToProps (dispatch) {
+  return {
+    deleteComment: (data) => dispatch(deleteComment(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostDetail)

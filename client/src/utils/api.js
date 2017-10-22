@@ -1,12 +1,13 @@
 const url = 'localhost'
 const port = '3001'
+const prefix = `http://` + url + `:` + port
 
 export function getPosts() {
   const headers = {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/posts`, { headers: headers })
+  return fetch(prefix + `/posts`, { headers: headers })
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
@@ -19,7 +20,7 @@ export function getPost(id) {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/posts/` + id, { headers: headers })
+  return fetch(prefix + `/posts/` + id, { headers: headers })
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
@@ -32,7 +33,7 @@ export function getPostComments(id) {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/posts/` + id + `/comments`, { headers: headers })
+  return fetch(prefix + `/posts/` + id + `/comments`, { headers: headers })
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
@@ -47,7 +48,7 @@ export function votePost(id, type) {
     'Authorization': 'the answer is 42',
     'option': type
   }
-  return fetch(`http://` + url + `:` + port + `/posts/` + id, { headers: headers })
+  return fetch(prefix + `/posts/` + id, { headers: headers })
     .then((res) => {res.json(); console.log(res)})
     .catch((e) => {
       console.log("Error in fetchPost", e)
@@ -65,7 +66,7 @@ export function addPost(id, timestamp, title, body, author, category) {
     'author': author,
     'category': category
   }
-  return fetch(`http://` + url + `:` + port + `/posts`, { headers: headers })
+  return fetch(prefix + `/posts`, { headers: headers })
     .then((res) => {res.json(); console.log(res)})
     .catch((e) => {
       console.log("Error in fetchPost", e)
@@ -77,7 +78,7 @@ export function getCategories() {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/categories`, { headers: headers })
+  return fetch(prefix + `/categories`, { headers: headers })
     .then((res) => res.json())
     .then((categories) => { return categories })
     .catch((e) => {
@@ -90,7 +91,7 @@ export function getCategory(category) {
     'method': 'GET',
     'Authorization': 'the answer is 42'
   }
-  return fetch(`http://` + url + `:` + port + `/categories/` + category, { headers: headers })
+  return fetch(prefix + `/categories/` + category, { headers: headers })
     .then((res) => res.json())
     .then((category) => { return category })
     .catch((e) => {

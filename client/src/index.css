@@ -25,6 +25,11 @@ a:focus {
   text-decoration: none;
 }
 
+.disabled {
+  color: lightgrey !important;
+  cursor: not-allowed;
+}
+
 .navbar-link {
   font-size: 3rem;
   margin-left: 10rem;
