@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux'
 import {
   getPosts,
   getCategories,
+  getComments,
   getPostComments
 } from '../utils/api'
 import {
@@ -14,6 +15,7 @@ import {
 
   GET_CATEGORIES,
 
+  SET_COMMENTS,
   GET_COMMENTS,
   ADD_COMMENT,
   DELETE_COMMENT,
@@ -21,11 +23,8 @@ import {
   EDIT_COMMENT,
 } from '../actions'
 
-//set intial post state to the posts retrieved from server
-var initialPostsState = {}
-getPosts().then((posts) => { initialPostsState = posts })
-
-function posts(state = getPosts().then((posts) => posts), action) {
+var initialPostsState = []
+function posts(state = initialPostsState, action) {
   switch (action.type) {
     case GET_POSTS:
       return {
@@ -36,14 +35,7 @@ function posts(state = getPosts().then((posts) => posts), action) {
         ...state,
         posts: [
           ...state.posts,
-          {
-            postId: action.postId,
-            title: action.title,
-            body: action.body,
-            author: action.author,
-            category: action.category,
-            time: action.time
-          }
+          action.post
         ]
       }
     case DELETE_POST:
@@ -55,7 +47,25 @@ function posts(state = getPosts().then((posts) => posts), action) {
       }
     case VOTE_POST:
       return {
-        ...state
+        ...state,
+        posts: [
+          ...state.posts.map((post) => {
+            if(post.postId !== action.postId) {
+              return post
+            } else {
+              if (action.type === 'upvote') {
+                post.voteScore = post.voteScore + 1
+                return post
+              } else if (action.type === 'downvote') {
+                post.voteScore = post.voteScore - 1
+                return post
+              }
+            }
+          }),
+          state.posts.filter((post) => {
+            return post.postId === action.postId
+          })
+        ]
       }
     case EDIT_POST:
       return {
@@ -66,10 +76,7 @@ function posts(state = getPosts().then((posts) => posts), action) {
   }
 }
 
-// set intial categories state to the posts retrieved from server
-var initialCategoriesState = {}
-getCategories().then((categories) => { initialCategoriesState = categories })
-
+var initialCategoriesState = []
 function categories(state = initialCategoriesState, action) {
   // TODO create functionality for creating categories
   switch(action.type) {
@@ -80,11 +87,15 @@ function categories(state = initialCategoriesState, action) {
   }
 }
 
-//set intial categories state to the posts retrieved from server
-var initialCommentsState = {}
-//getAllComments().then((comments) => { initialCommentsState = comments })
+var initialCommentsState = []
 function comments(state = initialCommentsState, action) {
   switch(action.type) {
+    case SET_COMMENTS:
+      console.log(action)
+      return {
+        ...state,
+        comments: action.comments
+      }
     case GET_COMMENTS:
       return {
         ...state
@@ -101,7 +112,10 @@ function comments(state = initialCommentsState, action) {
       console.log('hit')
       console.log(state)
       return {
-        ...state
+        ...state,
+        comments: [
+          state.comments.filter((comment) => { return comment !== action.commentId })
+        ]
       }
     case VOTE_COMMENT:
       return {

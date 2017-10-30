@@ -11,7 +11,7 @@ export function getPosts() {
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in getPosts', e)
     })
 }
 
@@ -24,7 +24,7 @@ export function getPost(id) {
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in getPosts', e)
     })
 }
 
@@ -37,7 +37,7 @@ export function getPostComments(id) {
     .then((res) => res.json())
     .then((posts) => { return posts })
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in getPostComments', e)
     })
 }
 
@@ -51,7 +51,7 @@ export function votePost(id, type) {
   return fetch(prefix + `/posts/` + id, { headers: headers })
     .then((res) => {res.json(); console.log(res)})
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in votePost', e)
     })
 }
 
@@ -69,7 +69,7 @@ export function addPost(id, timestamp, title, body, author, category) {
   return fetch(prefix + `/posts`, { headers: headers })
     .then((res) => {res.json(); console.log(res)})
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in addPost', e)
     })
 }
 
@@ -82,7 +82,7 @@ export function getCategories() {
     .then((res) => res.json())
     .then((categories) => { return categories })
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in getCategories', e)
     })
 }
 
@@ -95,6 +95,6 @@ export function getCategory(category) {
     .then((res) => res.json())
     .then((category) => { return category })
     .catch((e) => {
-      console.log("Error in fetchPost", e)
+      console.log('Error in getCategory', e)
     })
 }

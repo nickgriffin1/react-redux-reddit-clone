@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import Score from './Score'
 import {
+  setComments,
   deleteComment,
 } from '../actions'
 import { getPost, getPostComments } from '../utils/api'
@@ -35,6 +36,7 @@ class PostDetail extends React.Component {
         comments,
         numComments: comments.length
       })
+      this.props.setComments(this.state.comments)
     })
   }
 
@@ -91,7 +93,6 @@ class PostDetail extends React.Component {
     this.setState((prevState) => ({
       numComments: prevState.numComments - 1
     }))
-    console.log('this.props', this.props)
     this.props.deleteComment({ commentId })
   }
 
@@ -295,6 +296,7 @@ function mapStateToProps ({ posts, comments }) {
 
 function mapDispatchToProps (dispatch) {
   return {
+    setComments: (comments) => dispatch(setComments(comments)),
     deleteComment: (data) => dispatch(deleteComment(data)),
   }
 }

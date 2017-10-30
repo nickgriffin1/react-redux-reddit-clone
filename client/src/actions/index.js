@@ -6,6 +6,7 @@ export const EDIT_POST = 'EDIT_POST'
 
 export const GET_CATEGORIES = 'GET_CATEGORIES'
 
+export const SET_COMMENTS = 'SET_COMMENTS'
 export const GET_COMMENTS = 'GET_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
@@ -34,9 +35,10 @@ export function deletePost({ postId }) {
   }
 }
 
-export function editPost({ post }) {
+export function editPost({ postId, post }) {
   return {
     type: EDIT_POST,
+    postId,
     post
   }
 }
@@ -52,16 +54,22 @@ export function votePost({ postId, voteType }) {
 // Categories
 export function getCategories({ categories }) {
   return {
-    type: GET_CATEGORIES,
-    categories
+    type: GET_CATEGORIES
   }
 }
 
 // Comments
+export function setComments({ comments }) {
+  console.log('pure comments', comments)
+  return {
+    type: SET_COMMENTS,
+    comments
+  }
+}
+
 export function getComments({ comments }) {
   return {
-    type: GET_COMMENTS,
-    comments
+    type: GET_COMMENTS
   }
 }
 
@@ -88,9 +96,10 @@ export function voteComment({ commentId, voteType }) {
   }
 }
 
-export function editComment({ comment }) {
+export function editComment({ commentId, comment }) {
   return {
     type: EDIT_COMMENT,
+    commentId,
     comment
   }
 }
