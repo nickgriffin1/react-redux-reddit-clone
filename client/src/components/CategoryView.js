@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap'
 import { getCategories } from '../utils/api'
+import { setCategories } from '../actions'
 
 class CategoryView extends Component {
   state = {
@@ -10,9 +11,12 @@ class CategoryView extends Component {
   }
 
   componentDidMount() {
-    Promise.resolve(getCategories()).then((data) => {
-      this.setState({ categories: data.categories })
-    })
+    if (this.props.categories.length === 0) {
+      Promise.resolve(getCategories()).then((categories) => {
+        console.log('categories', categories)
+        this.props.setCategories({ categories })
+      })
+    }
   }
 
   render() {
@@ -22,7 +26,7 @@ class CategoryView extends Component {
         <Col className='category-row' xs={12}>
           <h1 className='category-text'>View a Category</h1>
         </Col>
-        {this.state.categories.map((category, index) => (
+        {this.props.categories.map((category, index) => (
           <Col key={index} className='category-row' xs={12}>
             <Link to={'/categories/' + category.path}>
               <Row>
@@ -44,8 +48,19 @@ class CategoryView extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  categories: state.categories
-})
+function mapStateToProps ({ categories }) {
+  return {
+    categories,
+  }
+}
 
-export default connect(mapStateToProps)(CategoryView)
+function mapDispatchToProps(dispatch) {
+  return {
+    setCategories: (data) => dispatch(setCategories(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CategoryView)

@@ -1,31 +1,37 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
+import { setPosts } from '../actions'
 import { getPosts } from '../utils/api'
 import Post from '../components/Post'
 import { capitalize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
-    posts: [],
     filteredPosts: []
   }
 
   componentDidMount() {
     // intialize posts
-    this.setPosts()
+    if (this.props.posts.length === 0) {
+      this.setPosts()
+    } else {
+      this.setState({ filteredPosts: this.props.posts })
+    }
   }
 
   componentDidUpdate(prevProps) {
     // reset filtered posts when on main page
-    if(this.props.location.pathname === '/' && prevProps.location.pathname !== '/') {
-      this.setState({ filteredPosts: this.state.posts })
+    if(this.props.router.location.pathname === '/' && prevProps.router.location.pathname !== '/') {
+      this.setState({ filteredPosts: this.props.posts })
     }
   }
 
   setPosts = () => {
     Promise.resolve(getPosts()).then((posts) => {
-      this.setState({ posts, filteredPosts: posts })
+      this.props.setPosts({ posts })
+      this.setState({ filteredPosts: posts })
       if (this.props.filter !== undefined) {
         this.filterPosts('category', this.props.filter)
       }
@@ -45,9 +51,11 @@ class ListView extends Component {
       })
     } else if (sorter === 'category') {
       console.log('sorting by category')
-      this.setState((prevState) => {
-        return { filteredPosts: prevState.posts.filter((post) => { return post.category === category})}
+      this.setState({
+        filteredPosts: this.props.posts.filter((post) => { return post.category === category})
       })
+    } else {
+      this.setState({ filteredPosts: this.props.posts })
     }
   }
 
@@ -92,4 +100,20 @@ class ListView extends Component {
   }
 }
 
-export default withRouter(ListView)
+function mapStateToProps ({ router, posts }) {
+  return {
+    router,
+    posts,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setPosts: (data) => dispatch(setPosts(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListView)

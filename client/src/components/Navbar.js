@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Navbar, Glyphicon } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 
@@ -28,6 +29,15 @@ class SmredditNavbar extends Component {
     console.log()
   }
 
+  setUnderline = (itemRoute) => {
+    const route = this.props.router.location.pathname
+    if (route === itemRoute) {
+      return 'navbar-link nav-item-active'
+    } else {
+      return 'navbar-link'
+    }
+  }
+
   render() {
     return (
       <Navbar inverse collapseOnSelect>
@@ -35,7 +45,7 @@ class SmredditNavbar extends Component {
           {this.state.routes.map((item, index) => (
               <NavLink
                 key={index}
-                className={this.state.route === item.route ? 'navbar-link nav-item-active' : 'navbar-link'}
+                className={this.setUnderline(item.route)}
                 to={item.route}
                 onClick={() => this.setState({ route: item.route })}
               >
@@ -48,4 +58,10 @@ class SmredditNavbar extends Component {
   }
 }
 
-export default SmredditNavbar
+function mapStateToProps ({ router }) {
+  return {
+    router,
+  }
+}
+
+export default connect(mapStateToProps)(SmredditNavbar)

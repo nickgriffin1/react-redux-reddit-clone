@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap'
-import { addPost } from '../actions'
+import { addPost, setCategories } from '../actions'
 import { getPost, getCategories } from '../utils/api'
 import { capitalize } from '../utils/shared'
 
@@ -16,9 +16,12 @@ class AddView extends Component {
   }
 
   componentDidMount() {
-    Promise.resolve(getCategories()).then((data) => {
-      this.setState({ categories: data.categories })
-    })
+    // set categories if not already set
+    if(this.props.categories.length === 0) {
+      Promise.resolve(getCategories()).then((categories) => {
+        this.props.setCategories({ categories })
+      })
+    }
 
     if (this.props.mode === 'editing') {
       Promise.resolve(getPost(this.props.postId)).then((post) => {
@@ -131,7 +134,7 @@ class AddView extends Component {
                   >
                     <MenuItem disabled>Category</MenuItem>
                     <MenuItem divider />
-                    {this.state.categories.map((category, index) => (
+                    {this.props.categories.map((category, index) => (
                       <MenuItem key={category.name} eventKey={category.name}>{category.name}</MenuItem>
                     ))}
                   </DropdownButton>
@@ -161,11 +164,20 @@ class AddView extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  addPost: (post) => dispatch(addPost(post)),
-})
+function mapStateToProps ({ categories }) {
+  return {
+    categories,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addPost: (data) => dispatch(addPost(data)),
+    setCategories: (data) => dispatch(setCategories(data)),
+  }
+}
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(AddView)

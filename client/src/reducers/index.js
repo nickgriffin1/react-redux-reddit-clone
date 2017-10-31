@@ -7,13 +7,13 @@ import {
   getPostComments
 } from '../utils/api'
 import {
-  GET_POSTS,
+  SET_POSTS,
   ADD_POST,
   DELETE_POST,
   VOTE_POST,
   EDIT_POST,
 
-  GET_CATEGORIES,
+  SET_CATEGORIES,
 
   SET_COMMENTS,
   GET_COMMENTS,
@@ -26,51 +26,30 @@ import {
 var initialPostsState = []
 function posts(state = initialPostsState, action) {
   switch (action.type) {
-    case GET_POSTS:
-      return {
-        ...state
-      }
+    case SET_POSTS:
+      return [
+        ...action.posts
+      ]
     case ADD_POST:
-      return {
+      return [
         ...state,
-        posts: [
-          ...state.posts,
-          action.post
-        ]
-      }
+        action.post
+      ]
     case DELETE_POST:
-      return {
-        ...state,
-        posts: state.posts.filter((post) => {
+      return [
+        state.posts.filter((post) => {
           return post.postId !== action.postId
         })
-      }
+      ]
     case VOTE_POST:
-      return {
+      return [
         ...state,
-        posts: [
-          ...state.posts.map((post) => {
-            if(post.postId !== action.postId) {
-              return post
-            } else {
-              if (action.type === 'upvote') {
-                post.voteScore = post.voteScore + 1
-                return post
-              } else if (action.type === 'downvote') {
-                post.voteScore = post.voteScore - 1
-                return post
-              }
-            }
-          }),
-          state.posts.filter((post) => {
-            return post.postId === action.postId
-          })
-        ]
-      }
+
+      ]
     case EDIT_POST:
-      return {
+      return [
         ...state
-      }
+      ]
     default:
       return state
   }
@@ -80,21 +59,26 @@ var initialCategoriesState = []
 function categories(state = initialCategoriesState, action) {
   // TODO create functionality for creating categories
   switch(action.type) {
-    case GET_CATEGORIES:
-      return action.categories.map((category) => (category.name))
+    case SET_CATEGORIES:
+      console.log('action', action)
+      return [
+        ...state,
+        ...action.categories
+      ]
     default:
       return state
   }
 }
 
-var initialCommentsState = []
+var initialCommentsState = {}
 function comments(state = initialCommentsState, action) {
+  const { comment, comments, postId } = action
   switch(action.type) {
     case SET_COMMENTS:
       console.log(action)
       return {
         ...state,
-        comments: action.comments
+        [postId]: comments
       }
     case GET_COMMENTS:
       return {
@@ -109,13 +93,14 @@ function comments(state = initialCommentsState, action) {
         ]
       }
     case DELETE_COMMENT:
-      console.log('hit')
-      console.log(state)
+      console.log(action.commentId)
+      console.log('state[action.commentId]', ...state[action.commentId])
       return {
         ...state,
-        comments: [
-          state.comments.filter((comment) => { return comment !== action.commentId })
-        ]
+        [action.commentId]: {
+          ...state.comments,
+
+        }
       }
     case VOTE_COMMENT:
       return {

@@ -18,6 +18,7 @@ class PostDetail extends React.Component {
   }
 
   componentDidMount() {
+    // TODO change to just use redux
     Promise.resolve(getPost(this.props.postId)).then((post) => {
       this.setState({
         title: post.title,
@@ -36,7 +37,7 @@ class PostDetail extends React.Component {
         comments,
         numComments: comments.length
       })
-      this.props.setComments(this.state.comments)
+      this.props.setPostComments({ postId: this.props.postId, comments })
     })
   }
 
@@ -88,12 +89,12 @@ class PostDetail extends React.Component {
   }
 
   deleteComment = (commentId) => {
-    this.updateCommentUtil(commentId, 'deleted', true, true)
+    //this.updateCommentUtil(commentId, 'deleted', true, true)
     // also need to update comment amount
     this.setState((prevState) => ({
       numComments: prevState.numComments - 1
     }))
-    this.props.deleteComment({ commentId })
+    this.props.deletePostComment({ commentId })
   }
 
   initializeEditComment = (commentId) => {
@@ -128,6 +129,7 @@ class PostDetail extends React.Component {
   }
 
   render() {
+    const comments = this.props.comments[this.props.postId]
     return (
       <Row>
         <Col xs={12} lg={10} lgOffset={1} className='post-detail'>
@@ -206,8 +208,8 @@ class PostDetail extends React.Component {
                   }
                 </Col>
               </Row>
-              {this.state.comments && this.state.showComments && this.state.comments
-                .filter((comment) => comment.deleted === false)
+              {comments && this.state.showComments &&
+                comments.filter((comment) => comment.deleted === false)
                 .map((comment, index) => (
                   <div key={comment.id}>
                     <hr />
@@ -287,17 +289,16 @@ class PostDetail extends React.Component {
   }
 }
 
-function mapStateToProps ({ posts, comments }) {
+function mapStateToProps ({ comments }) {
   return {
-    posts,
     comments,
   }
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
-    setComments: (comments) => dispatch(setComments(comments)),
-    deleteComment: (data) => dispatch(deleteComment(data)),
+    setPostComments: (data) => dispatch(setComments(data)),
+    deletePostComment: (data) => dispatch(deleteComment(data)),
   }
 }
 

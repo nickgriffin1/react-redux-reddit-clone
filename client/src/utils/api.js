@@ -80,7 +80,7 @@ export function getCategories() {
   }
   return fetch(prefix + `/categories`, { headers: headers })
     .then((res) => res.json())
-    .then((categories) => { return categories })
+    .then((data) => { return data.categories })
     .catch((e) => {
       console.log('Error in getCategories', e)
     })
