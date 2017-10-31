@@ -31,7 +31,6 @@ class PostDetail extends React.Component {
     })
 
     Promise.resolve(getPostComments(this.props.postId)).then((comments) => {
-      console.log('comments', comments)
       // needed to account for deleted comments
       const commentsLen = comments.filter((comment) => comment.deleted === false).length
       this.setState({
@@ -53,10 +52,6 @@ class PostDetail extends React.Component {
       voteScore: 0,
       deleted: false
     }
-    console.log(
-      this.props
-    )
-    console.log(newComment)
     const comments = Object.assign([], this.state.comments)
     comments.push(newComment)
     this.setState((prevState) => ({

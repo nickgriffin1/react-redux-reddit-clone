@@ -25,10 +25,6 @@ class SmredditNavbar extends Component {
     route: '/'
   }
 
-  componentDidUpdate() {
-    console.log()
-  }
-
   setUnderline = (itemRoute) => {
     const route = this.props.router.location.pathname
     if (route === itemRoute) {
