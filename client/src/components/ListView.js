@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
 import { setPosts } from '../actions'
 import { getPosts } from '../utils/api'
 import Post from '../components/Post'
@@ -15,9 +14,11 @@ class ListView extends Component {
   componentDidMount() {
     // intialize posts
     if (this.props.posts.length === 0) {
+      // set posts from API
       this.setPosts()
     } else {
-      this.setState({ filteredPosts: this.props.posts })
+      // set posts from props and filter as needed
+      this.setFilteredPosts(this.props.posts)
     }
   }
 
@@ -28,13 +29,17 @@ class ListView extends Component {
     }
   }
 
+  setFilteredPosts = (posts) => {
+    this.setState({ filteredPosts: this.props.posts })
+    if (this.props.filter !== undefined) {
+      this.filterPosts('category', this.props.filter)
+    }
+  }
+
   setPosts = () => {
     Promise.resolve(getPosts()).then((posts) => {
       this.props.setPosts({ posts })
-      this.setState({ filteredPosts: posts })
-      if (this.props.filter !== undefined) {
-        this.filterPosts('category', this.props.filter)
-      }
+      this.setFilteredPosts(posts)
     })
   }
 
@@ -77,7 +82,7 @@ class ListView extends Component {
 
         {this.props.filter &&
           <Row className='post-container'>
-            <Col xs={12}>
+            <Col xs={11} xsOffset={1}>
               <h1>{capitalize(this.props.filter)}</h1>
             </Col>
           </Row>

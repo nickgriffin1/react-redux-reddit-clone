@@ -146,7 +146,7 @@ class AddView extends Component {
                   </Button> :
                   <Button
                     bsStyle='primary'
-                    className='add-form-submit'
+                    style={{ marginLeft: '3rem' }}
                     onClick={(e) => this.handleFormSubmit(e)}
                     type='submit'
                   >Submit</Button>

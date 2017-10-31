@@ -11,7 +11,7 @@ class CategoryView extends Component {
   }
 
   componentDidMount() {
-    if (this.props.categories.length === 0) {
+    if (this.props.categories.length < 1) {
       Promise.resolve(getCategories()).then((categories) => {
         console.log('categories', categories)
         this.props.setCategories({ categories })

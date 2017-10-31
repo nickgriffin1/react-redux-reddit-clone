@@ -1,12 +1,6 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import {
-  getPosts,
-  getCategories,
-  getComments,
-  getPostComments
-} from '../utils/api'
-import {
   SET_POSTS,
   ADD_POST,
   DELETE_POST,
@@ -72,7 +66,7 @@ function categories(state = initialCategoriesState, action) {
 
 var initialCommentsState = {}
 function comments(state = initialCommentsState, action) {
-  const { comment, comments, postId } = action
+  const { comments, postId } = action
   switch(action.type) {
     case SET_COMMENTS:
       console.log(action)
@@ -130,5 +124,6 @@ export default combineReducers({
   posts,
   comments,
   categories,
+  users,
   router: routerReducer
 })

@@ -32,10 +32,11 @@ class PostDetail extends React.Component {
 
     Promise.resolve(getPostComments(this.props.postId)).then((comments) => {
       console.log('comments', comments)
-      const commentsLen = comments.filter((comment) => comments.deleted === false).length
+      // needed to account for deleted comments
+      const commentsLen = comments.filter((comment) => comment.deleted === false).length
       this.setState({
         comments,
-        numComments: comments.length
+        numComments: commentsLen
       })
       this.props.setPostComments({ postId: this.props.postId, comments })
     })
