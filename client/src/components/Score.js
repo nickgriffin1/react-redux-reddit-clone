@@ -1,41 +1,36 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Row, Col, Glyphicon } from 'react-bootstrap'
-import { votePost } from '../utils/api'
+import { upVotePost, downVotePost } from '../actions'
 
 class Score extends Component {
 	state = {
-    score: this.props.score
+    post: this.props.posts
+			.filter(post => post.id === this.props.postId)[0]
   }
 
-  changeScore = (changeInScore) => {
-    // so each user only has one vote
-    const newScore = this.state.score + changeInScore
-    const maxScore = this.props.score + 1
-    const minScore = this.props.score - 1
-    // make sure score is in bounds
-    if (newScore <= maxScore && newScore >= minScore) {
-      // set local state for UI
-      this.setState((prevState) => {
-        return { score: prevState.score + changeInScore }
-      })
-      // call api to set votes
-      const type = changeInScore === 1 ? 'upVote' : 'downVote'
-      votePost(this.props.id, type)
-    }
+  changeScore = (type) => {
+		if (this.state.post.hasVoted !== true) {
+	    if(type === 'upvote') {
+				this.props.upVotePost({ postId: this.state.post.id })
+			} else if (type === 'downvote') {
+				this.props.downVotePost({ postId: this.state.post.id })
+			}
+		}
   }
 
   render() {
   	return (
   		<Row>
-	      <Col xs={12} onClick={() => this.changeScore(1)}>
+	      <Col xs={12} onClick={() => this.changeScore('upvote')}>
 	        <Glyphicon className='post-arrow' glyph='menu-up' />
 	      </Col>
 
 	      <Col xs={12}>
-	        <h3 className='post-score'>{this.state.score}</h3>
+	        <h3 className='post-score'>{this.state.post.voteScore}</h3>
 	      </Col>
 
-	      <Col xs={12} onClick={() => this.changeScore(-1)}>
+	      <Col xs={12} onClick={() => this.changeScore('downvote')}>
 	        <Glyphicon className='post-arrow' glyph='menu-down' />
 	      </Col>
 	    </Row>
@@ -43,4 +38,20 @@ class Score extends Component {
   }
 }
 
-export default Score
+function mapStateToProps ({ posts }) {
+  return {
+    posts,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    upVotePost: data => dispatch(upVotePost(data)),
+    downVotePost: data => dispatch(downVotePost(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Score)

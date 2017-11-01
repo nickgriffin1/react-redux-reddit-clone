@@ -1,7 +1,8 @@
 export const SET_POSTS = 'SET_POSTS'
 export const ADD_POST = 'ADD_POST'
 export const DELETE_POST = 'DELETE_POST'
-export const VOTE_POST = 'VOTE_POST'
+export const UP_VOTE_POST = 'UP_VOTE_POST'
+export const DOWN_VOTE_POST = 'DOWN_VOTE_POST'
 export const EDIT_POST = 'EDIT_POST'
 
 export const SET_CATEGORIES = 'SET_CATEGORIES'
@@ -10,7 +11,8 @@ export const SET_COMMENTS = 'SET_COMMENTS'
 export const GET_COMMENTS = 'GET_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
-export const VOTE_COMMENT = 'VOTE_COMMENT'
+export const UP_VOTE_COMMENT = 'UP_VOTE_COMMENT'
+export const DOWN_VOTE_COMMENT = 'DOWN_VOTE_COMNMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 
 // Posts
@@ -43,11 +45,17 @@ export function editPost({ postId, post }) {
   }
 }
 
-export function votePost({ postId, voteType }) {
+export function upVotePost({ postId }) {
   return {
-    type: VOTE_POST,
-    postId,
-    voteType
+    type: UP_VOTE_POST,
+    postId
+  }
+}
+
+export function downVotePost({ postId }) {
+  return {
+    type: DOWN_VOTE_POST,
+    postId
   }
 }
 
@@ -68,32 +76,41 @@ export function setComments({ postId, comments }) {
   }
 }
 
-export function addComment({ comment }) {
+export function addComment({ postId, comment }) {
   return {
     type: ADD_COMMENT,
+    postId,
     comment
   }
 }
 
-export function deleteComment({ commentId }) {
+export function deleteComment({ postId, commentId }) {
   return {
     type: DELETE_COMMENT,
+    postId,
     commentId
   }
 }
 
-export function voteComment({ commentId, voteType }) {
+export function upVoteComment({ postId, commentId }) {
   return {
-    type: VOTE_COMMENT,
-    commentId,
-    voteType
+    type: UP_VOTE_COMMENT,
+    postId,
+    commentId
   }
 }
 
-export function editComment({ commentId, comment }) {
+export function downVoteComment({ postId, commentId }) {
+  return {
+    type: DOWN_VOTE_COMMENT,
+    postId,
+    commentId
+  }
+}
+
+export function editComment({ comment }) {
   return {
     type: EDIT_COMMENT,
-    commentId,
     comment
   }
 }

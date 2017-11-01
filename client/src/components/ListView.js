@@ -37,10 +37,12 @@ class ListView extends Component {
   }
 
   setPosts = () => {
-    Promise.resolve(getPosts()).then((posts) => {
-      this.props.setPosts({ posts })
-      this.setFilteredPosts(posts)
-    })
+    Promise
+      .resolve(getPosts())
+      .then((posts) => {
+        this.props.setPosts({ posts })
+        this.setFilteredPosts(posts)
+      })
   }
 
   filterPosts = (sorter, category) => {
