@@ -26,8 +26,6 @@ function posts(state = initialPostsState, action) {
         ...action.posts
       ]
     case ADD_POST:
-      console.log('reached reducers')
-      console.log('action', action)
       return [
         ...state,
         action.post
@@ -37,7 +35,7 @@ function posts(state = initialPostsState, action) {
         state.posts.filter(post => post.postId !== action.postId)
       ]
     case UP_VOTE_POST:
-      const currentPost = state.filter(post => post.id === action.postId)[0]
+      let currentPost = state.filter(post => post.id === action.postId)[0]
       currentPost.voteScore = currentPost.voteScore + 1
       currentPost.hasVoted = true
       return [
@@ -67,7 +65,6 @@ function categories(state = initialCategoriesState, action) {
   // TODO create functionality for creating categories
   switch(action.type) {
     case SET_CATEGORIES:
-      console.log('action', action)
       return [
         ...state,
         ...action.categories
@@ -79,7 +76,7 @@ function categories(state = initialCategoriesState, action) {
 
 var initialCommentsState = {}
 function comments(state = initialCommentsState, action) {
-  const { comments, postId } = action
+  const { comments, comment, commentId, postId } = action
   switch(action.type) {
     case SET_COMMENTS:
       return {
@@ -89,49 +86,56 @@ function comments(state = initialCommentsState, action) {
     case ADD_COMMENT:
       return {
         ...state,
-        [action.postId]: [
-          ...state[action.postId],
-          action.comment
+        [postId]: [
+          ...state[postId],
+          comment
         ]
       }
     case DELETE_COMMENT:
-      let activeComment = state[action.postId]
-        .filter((comment) => comment.id === action.commentId)[0]
+      let activeComment = state[postId]
+        .filter((comment) => comment.id === commentId)[0]
       activeComment.deleted = true
       return {
         ...state,
-        [action.commentId]: {
-          ...state[action.commentId].filter(comment => comment !== action.commentId),
+        [postId]: {
+          ...state[commentId].filter(comment => comment !== action.commentId),
           activeComment
         }
       }
     case UP_VOTE_COMMENT:
-      activeComment = state[action.postId]
-        .filter((comment) => comment.id === action.commentId)[0]
+      activeComment = state[postId]
+        .filter((comment) => comment.id === commentId)[0]
       activeComment.voteScore = activeComment.voteScore + 1
       activeComment.hasVoted = true
       return {
         ...state,
-        [action.postId]: [
-          ...state[action.postId].filter((comment) => comment.id !== action.commentId),
+        [postId]: [
+          ...state[postId].filter((comment) => comment.id !== commentId),
           activeComment
         ]
       }
     case DOWN_VOTE_COMMENT:
-      activeComment = state[action.postId]
-        .filter((comment) => comment.id === action.commentId)[0]
+      activeComment = state[postId]
+        .filter((comment) => comment.id === commentId)[0]
       activeComment.voteScore = activeComment.voteScore - 1
       activeComment.hasVoted = true
       return {
         ...state,
         [action.postId]: [
-          ...state[action.postId].filter((comment) => comment.id !== action.commentId),
+          ...state[action.postId].filter((comment) => comment.id !== commentId),
           activeComment
         ]
       }
     case EDIT_COMMENT:
+      activeComment = state[postId]
+        .filter((comment) => comment.id === action.comment.id)[0]
+      activeComment.body = action.comment.temporaryBody
       return {
-        ...state
+        ...state,
+        [postId]: [
+          ...state[postId].filter((comment) => comment.id !== action.comment.id),
+          activeComment
+        ]
       }
     default:
       return state

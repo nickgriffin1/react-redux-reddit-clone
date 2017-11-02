@@ -38,8 +38,7 @@ class ListView extends Component {
 
   setPosts = () => {
     Promise
-      .resolve(getPosts())
-      .then((posts) => {
+      .resolve(getPosts()).then((posts) => {
         this.props.setPosts({ posts })
         this.setFilteredPosts(posts)
       })

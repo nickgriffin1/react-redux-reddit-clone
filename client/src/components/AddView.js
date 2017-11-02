@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap'
-import { addPost, setCategories } from '../actions'
+import { addPost, editPost, setCategories } from '../actions'
 import { getPost, getCategories } from '../utils/api'
 import { capitalize } from '../utils/shared'
 
@@ -31,6 +31,7 @@ class AddView extends Component {
           body: post.body,
           author: post.author,
           category: capitalize(post.category),
+          voteScore: post.voteScore
         })
       })
     } else {
@@ -56,7 +57,7 @@ class AddView extends Component {
         time: Date.now(),
         postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
       }, () => {
-        this.props.addPost({
+        const newPost = {
           post: {
             id: this.state.postId,
             timestamp: this.state.time,
@@ -64,10 +65,17 @@ class AddView extends Component {
             body,
             author,
             category,
-            voteScore: 0,
+            voteScore: this.state.voteScore || 0,
             deleted: false
           }
-        })
+        }
+        // for editing a post
+        if (this.props.mode === 'editing') {
+          this.props.editPost(newPost)
+        // for creating a new post
+        } else {
+          this.props.addPost(newPost)
+        }
         this.setState({ done: true })
       })
     } else {
@@ -152,7 +160,7 @@ class AddView extends Component {
                 </FormGroup>
 
                 {this.state.done === true ?
-                  <Button bsStyle='success' className='add-form-submit'>
+                  <Button bsStyle='success' style={{ marginLeft: '3rem' }}>
                     <Glyphicon glyph='ok' /> Finished
                   </Button> :
                   <Button
@@ -164,7 +172,11 @@ class AddView extends Component {
                 }
 
                 {this.props.mode === 'editing' &&
-                  <Button bsStyle='danger' onClick={this.deletePost}>Delete</Button>
+                  <Button
+                    bsStyle='danger'
+                    style={{ marginLeft: '3rem' }}
+                    onClick={this.deletePost}
+                  >Delete</Button>
                 }
               </div>
             </Form>
@@ -184,6 +196,7 @@ function mapStateToProps ({ categories }) {
 function mapDispatchToProps(dispatch) {
   return {
     addPost: data => dispatch(addPost(data)),
+    editPost: data => dispatch(editPost(data)),
     setCategories: data => dispatch(setCategories(data)),
   }
 }

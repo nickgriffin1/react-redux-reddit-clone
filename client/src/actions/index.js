@@ -108,9 +108,10 @@ export function downVoteComment({ postId, commentId }) {
   }
 }
 
-export function editComment({ comment }) {
+export function editComment({ postId, comment }) {
   return {
     type: EDIT_COMMENT,
+    postId,
     comment
   }
 }

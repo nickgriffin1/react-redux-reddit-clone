@@ -105,9 +105,12 @@ class PostDetail extends React.Component {
     this.updateCommentUtil(commentId, 'editing', true)
   }
 
-  updateComment = (commentId, newValue) => {
-    this.updateCommentUtil(commentId, 'body', newValue, true)
-    // TODO dispatch EDIT_COMMENT
+  updateComment = (comment) => {
+    //this.updateCommentUtil(commentId, 'body', newValue, true)
+    this.props.editComment({
+      postId: this.props.postId,
+      comment
+    })
   }
 
   cancelUpdateComment = (commentId) => {
@@ -230,7 +233,7 @@ class PostDetail extends React.Component {
                               <Button
                                 type='submit'
                                 bsStyle='success'
-                                onClick={() => this.updateComment(comment.id, comment.temporaryBody)}
+                                onClick={() => this.updateComment(comment)}
                               >Submit</Button>
                               <Button
                                 type='submit'
