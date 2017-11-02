@@ -49,14 +49,25 @@ class AddView extends Component {
     event.preventDefault()
 
     // dispatch addPost if all posts are populated
-    const { title, body, author, category, time } = this.state
+    const { title, body, author, category } = this.state
     if (title.length > 0 && body.length > 0 && author.length > 0 && category.length > 0) {
       // set the time and id in state and call action and change route in callback
       this.setState({
         time: Date.now(),
         postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
       }, () => {
-        this.props.addPost({ postId: this.state.postId, title, body, author, category, time })
+        this.props.addPost({
+          post: {
+            id: this.state.postId,
+            timestamp: this.state.time,
+            title,
+            body,
+            author,
+            category,
+            voteScore: 0,
+            deleted: false
+          }
+        })
         this.setState({ done: true })
       })
     } else {
@@ -172,8 +183,8 @@ function mapStateToProps ({ categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addPost: (data) => dispatch(addPost(data)),
-    setCategories: (data) => dispatch(setCategories(data)),
+    addPost: data => dispatch(addPost(data)),
+    setCategories: data => dispatch(setCategories(data)),
   }
 }
 

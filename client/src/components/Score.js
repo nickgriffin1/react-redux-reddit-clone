@@ -5,8 +5,7 @@ import { upVotePost, downVotePost } from '../actions'
 
 class Score extends Component {
 	state = {
-    post: this.props.posts
-			.filter(post => post.id === this.props.postId)[0]
+    post: this.props.posts.filter(post => post.id === this.props.postId)[0] || null
   }
 
   changeScore = (type) => {
@@ -27,7 +26,7 @@ class Score extends Component {
 	      </Col>
 
 	      <Col xs={12}>
-	        <h3 className='post-score'>{this.state.post.voteScore}</h3>
+	        <h3 className='post-score'>{this.state.post && this.state.post.voteScore}</h3>
 	      </Col>
 
 	      <Col xs={12} onClick={() => this.changeScore('downvote')}>

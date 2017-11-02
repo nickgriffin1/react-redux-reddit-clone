@@ -26,15 +26,15 @@ function posts(state = initialPostsState, action) {
         ...action.posts
       ]
     case ADD_POST:
+      console.log('reached reducers')
+      console.log('action', action)
       return [
         ...state,
         action.post
       ]
     case DELETE_POST:
       return [
-        state.posts.filter((post) => {
-          return post.postId !== action.postId
-        })
+        state.posts.filter(post => post.postId !== action.postId)
       ]
     case UP_VOTE_POST:
       const currentPost = state.filter(post => post.id === action.postId)[0]
@@ -50,11 +50,12 @@ function posts(state = initialPostsState, action) {
       curPost.hasVoted = true
       return [
         ...state.filter(post => post.id !== action.postId),
-        currentPost
+        curPost
       ]
     case EDIT_POST:
       return [
-        ...state
+        ...state.filter(post => post.id !== action.postId),
+        action.post
       ]
     default:
       return state
