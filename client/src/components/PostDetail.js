@@ -149,7 +149,7 @@ class PostDetail extends React.Component {
                   <h3 className='post-detail-title'>{this.state.title}</h3>
                 </Col>
                 <Col xs={2}>
-                  <Link to={'/posts/' + this.props.postId + '/edit/'}>
+                  <Link to={'/' + this.props.category + '/' + this.props.postId + '/edit/'}>
                     <Button style={{ float: 'right'}}>
                       <h5>
                         <Glyphicon glyph='pencil' /> Edit

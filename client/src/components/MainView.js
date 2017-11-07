@@ -13,14 +13,14 @@ class MainView extends Component {
       	<Switch>
 	        <Route exact path='/' component={ListView} />
 	        <Route exact path='/categories' component={CategoryView} />
-	        <Route path='/categories/:category' render={({ match }) => (
+	        <Route exact path='/:category' render={({ match }) => (
 	        	<ListView filter={match.params.category} />
 	        )}/>
 	        <Route exact path='/add' component={AddView} />
-	        <Route exact path='/posts/:post' render={({ match }) => (
-            <PostDetail postId={match.params.post} />
+	        <Route exact path='/:category/:post' render={({ match }) => (
+            <PostDetail category={match.params.category} postId={match.params.post} />
           )}/>
-          <Route exact path='/posts/:post/edit' render={({ match }) => (
+          <Route exact path='/:category/:post/edit' render={({ match }) => (
             <AddView
               postId={match.params.post}
               mode='editing'

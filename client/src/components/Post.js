@@ -5,14 +5,13 @@ import Score from './Score'
 
 class Post extends React.Component {
   render() {
-    console.log('post props', this.props)
     return (
       <Row className='post-container'>
         <Col xs={1} md={1} lg={1}>
           <Score postId={this.props.id} />
         </Col>
         <Col xs={8} md={8} lg={8}>
-          <Link to={'/posts/' + this.props.id}>
+          <Link to={this.props.category + '/' + this.props.id}>
             <h4 className='post-title'>{this.props.title}</h4>
           </Link>
           <p className='post-body'>{this.props.body}</p>
