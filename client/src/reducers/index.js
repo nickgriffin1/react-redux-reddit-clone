@@ -31,8 +31,12 @@ function posts(state = initialPostsState, action) {
         action.post
       ]
     case DELETE_POST:
+      const deletedPost = state.filter(post => post.id === action.postId)[0]
+      deletedPost.deleted = true
       return [
-        state.posts.filter(post => post.postId !== action.postId)
+        ...state.filter(post => post.id !== action.postId),
+        deletedPost
+
       ]
     case UP_VOTE_POST:
       let currentPost = state.filter(post => post.id === action.postId)[0]
@@ -51,6 +55,7 @@ function posts(state = initialPostsState, action) {
         curPost
       ]
     case EDIT_POST:
+      console.log('action', action)
       return [
         ...state.filter(post => post.id !== action.postId),
         action.post
@@ -92,13 +97,13 @@ function comments(state = initialCommentsState, action) {
         ]
       }
     case DELETE_COMMENT:
-      let activeComment = state[postId]
+      var activeComment = state[postId]
         .filter((comment) => comment.id === commentId)[0]
       activeComment.deleted = true
       return {
         ...state,
         [postId]: {
-          ...state[commentId].filter(comment => comment !== action.commentId),
+          ...state[postId].filter(comment => comment.id !== action.commentId),
           activeComment
         }
       }

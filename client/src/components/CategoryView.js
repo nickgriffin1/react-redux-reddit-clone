@@ -24,29 +24,29 @@ class CategoryView extends Component {
   render() {
     return (
       <Grid>
-      <Row>
-        <Col className='category-row' xs={12}>
-          <h1 className='category-text'>View a Category</h1>
-        </Col>
-        {this.props.categories.map((category, index) => (
-          <Col key={index} className='category-row' xs={12}>
-            <Link to={'/categories/' + category.path}>
-              <Row>
-                <h2 className='category-text'>
-                  <Col xs={11}>
-                    { category.name }
-                  </Col>
-                  <Col xs={1}>
-                    <Glyphicon glyph='chevron-right' />
-                  </Col>
-                </h2>
-              </Row>
-            </Link>
+        <Row>
+          <Col className='category-row' xs={12}>
+            <h1 className='category-text'>View a Category</h1>
           </Col>
-        ))}
+          {this.props.categories.map((category, index) => (
+            <Col key={index} className='category-row' xs={12}>
+              <Link to={'/categories/' + category.path}>
+                <Row>
+                  <h2 className='category-text'>
+                    <Col xs={11}>
+                      { category.name }
+                    </Col>
+                    <Col xs={1}>
+                      <Glyphicon glyph='chevron-right' />
+                    </Col>
+                  </h2>
+                </Row>
+              </Link>
+            </Col>
+          ))}
         </Row>
       </Grid>
-    );
+    )
   }
 }
 

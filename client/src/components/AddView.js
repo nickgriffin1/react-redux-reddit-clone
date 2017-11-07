@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap'
-import { addPost, editPost, setCategories } from '../actions'
+import { addPost, editPost, deletePost, setCategories } from '../actions'
 import { getPost, getCategories } from '../utils/api'
 import { capitalize } from '../utils/shared'
 
@@ -58,23 +59,21 @@ class AddView extends Component {
         postId: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
       }, () => {
         const newPost = {
-          post: {
-            id: this.state.postId,
-            timestamp: this.state.time,
-            title,
-            body,
-            author,
-            category,
-            voteScore: this.state.voteScore || 0,
-            deleted: false
-          }
+          id: this.state.postId,
+          timestamp: this.state.time,
+          title,
+          body,
+          author,
+          category,
+          voteScore: this.state.voteScore || 0,
+          deleted: false
         }
         // for editing a post
         if (this.props.mode === 'editing') {
-          this.props.editPost(newPost)
+          this.props.editPost({ post: newPost, postId: this.props.postId })
         // for creating a new post
         } else {
-          this.props.addPost(newPost)
+          this.props.addPost({ post: newPost })
         }
         this.setState({ done: true })
       })
@@ -100,14 +99,13 @@ class AddView extends Component {
   }
 
   deletePost = () => {
-    // TODO not yet implemented
-    console.log('fix me')
+    this.props.deletePost({ postId: this.props.postId})
   }
 
   render() {
     return (
       <Row>
-        <Col sm={12} lg={10} lgOffset={1}>
+        <Col sm={12} lg={8} lgOffset={2}>
           <div className='add-view-container'>
             <h1>Add/Edit a post</h1>
             <Form>
@@ -172,11 +170,13 @@ class AddView extends Component {
                 }
 
                 {this.props.mode === 'editing' &&
-                  <Button
-                    bsStyle='danger'
-                    style={{ marginLeft: '3rem' }}
-                    onClick={this.deletePost}
-                  >Delete</Button>
+                  <Link to='/'>
+                    <Button
+                      bsStyle='danger'
+                      style={{ marginLeft: '3rem' }}
+                      onClick={this.deletePost}
+                    >Delete</Button>
+                  </Link>
                 }
               </div>
             </Form>
@@ -187,9 +187,9 @@ class AddView extends Component {
   }
 }
 
-function mapStateToProps ({ categories }) {
+function mapStateToProps ({ categories, router }) {
   return {
-    categories,
+    categories
   }
 }
 
@@ -197,6 +197,7 @@ function mapDispatchToProps(dispatch) {
   return {
     addPost: data => dispatch(addPost(data)),
     editPost: data => dispatch(editPost(data)),
+    deletePost: data => dispatch(deletePost(data)),
     setCategories: data => dispatch(setCategories(data)),
   }
 }

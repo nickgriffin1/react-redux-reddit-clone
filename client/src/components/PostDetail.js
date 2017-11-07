@@ -22,10 +22,8 @@ class PostDetail extends React.Component {
   }
 
   componentDidMount() {
-    // TODO change to just use redux
-    Promise
-      .resolve(getPost(this.props.postId))
-      .then((post) => {
+    Promise.resolve(getPost(this.props.postId))
+      .then(post => {
         this.setState({
           title: post.title,
           body: post.body,
@@ -36,8 +34,8 @@ class PostDetail extends React.Component {
         })
       })
 
-    Promise
-      .resolve(getPostComments(this.props.postId)).then((comments) => {
+    Promise.resolve(getPostComments(this.props.postId))
+      .then(comments => {
         // needed to account for deleted comments
         const commentsLen = comments.filter((comment) => comment.deleted === false).length
         this.setState({
@@ -62,7 +60,7 @@ class PostDetail extends React.Component {
     this.props.addComment({ postId: this.props.postId, comment: newComment })
     const comments = Object.assign([], this.state.comments)
     comments.push(newComment)
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       comments,
       commenting: false,
       numComments: prevState.numComments + 1
@@ -98,7 +96,9 @@ class PostDetail extends React.Component {
     this.setState((prevState) => ({
       numComments: prevState.numComments - 1
     }))
-    this.props.deletePostComment({ commentId })
+    this.props.deletePostComment({ postId: this.props.postId, commentId })
+    // used to close editing
+    this.updateCommentUtil(commentId, null, null, true)
   }
 
   initializeEditComment = (commentId) => {
@@ -111,6 +111,8 @@ class PostDetail extends React.Component {
       postId: this.props.postId,
       comment
     })
+    // used to close editing
+    this.updateCommentUtil(comment.id, null, null, true)
   }
 
   cancelUpdateComment = (commentId) => {
@@ -136,7 +138,7 @@ class PostDetail extends React.Component {
     const comments = this.props.comments[this.props.postId]
     return (
       <Row>
-        <Col xs={12} lg={10} lgOffset={1} className='post-detail'>
+        <Col xs={12} lg={8} lgOffset={2} className='post-detail'>
           <Row>
             <Col xs={1}>
               <Score postId={this.props.postId} />
@@ -163,19 +165,19 @@ class PostDetail extends React.Component {
             </Col>
           </Row>
         </Col>
-        <Col xs={12} lg={10} lgOffset={1} className='post-comments'>
+        <Col xs={12} lg={8} lgOffset={2} className='post-comments'>
           <Row>
             <Col xs={10} xsOffset={1}>
               {this.state.commenting === true ?
                 <Row>
-                  <Col xs={10}>
+                  <Col xs={9}>
                     <input
                       type='text'
                       style={{ width: '100%', color: 'black' }}
                       onChange={(event) => this.setState({ newCommentBody: event.target.value })}
                     />
                   </Col>
-                  <Col xs={2}>
+                  <Col xs={3}>
                     <Button
                       bsStyle='success'
                       style={{ marginRight: '1rem' }}
@@ -213,10 +215,8 @@ class PostDetail extends React.Component {
                 </Col>
               </Row>
               {comments && this.state.showComments &&
-                comments.filter((comment) => comment.deleted === false)
-                  .sort(function(a, b) {
-                    return b.voteScore - a.voteScore;
-                  })
+                comments.filter(comment => comment.deleted === false)
+                  .sort((a, b) => b.voteScore - a.voteScore)
                   .map(comment => (
                     <div key={comment.id}>
                       <hr />

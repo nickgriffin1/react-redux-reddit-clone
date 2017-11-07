@@ -89,17 +89,19 @@ class ListView extends Component {
           </Row>
         }
 
-        {this.state.filteredPosts && this.state.filteredPosts.map((post) => (
-          <Post
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            author={post.author}
-            body={post.body}
-            category={post.category}
-            score={post.voteScore}
-            date={formatDate(post.timestamp)}
-          />
+        {this.state.filteredPosts && this.state.filteredPosts
+          .filter(post => post.deleted === false)
+          .map(post => (
+            <Post
+              key={post.id}
+              id={post.id}
+              title={post.title}
+              author={post.author}
+              body={post.body}
+              category={post.category}
+              score={post.voteScore}
+              date={formatDate(post.timestamp)}
+            />
         ))}
       </Grid>
     );
