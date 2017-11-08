@@ -1,25 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
-import { setPosts } from '../actions'
-import { getPosts } from '../utils/api'
 import Post from '../components/Post'
 import { capitalize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
-    filteredPosts: []
-  }
-
-  componentDidMount() {
-    // intialize posts
-    if (this.props.posts.length === 0) {
-      // set posts from API
-      this.setPosts()
-    } else {
-      // set posts from props and filter as needed
-      this.setFilteredPosts(this.props.posts)
-    }
+    filteredPosts: [],
+    loading: true
   }
 
   componentDidUpdate(prevProps) {
@@ -27,21 +15,18 @@ class ListView extends Component {
     if(this.props.router.location.pathname === '/' && prevProps.router.location.pathname !== '/') {
       this.setState({ filteredPosts: this.props.posts })
     }
+
+    // set posts once async call has finished
+    if (prevProps.posts.length === 0 && this.props.posts.length > 0) {
+      this.setFilteredPosts()
+    }
   }
 
-  setFilteredPosts = (posts) => {
+  setFilteredPosts = () => {
     this.setState({ filteredPosts: this.props.posts })
     if (this.props.filter !== undefined) {
       this.filterPosts('category', this.props.filter)
     }
-  }
-
-  setPosts = () => {
-    Promise
-      .resolve(getPosts()).then((posts) => {
-        this.props.setPosts({ posts })
-        this.setFilteredPosts(posts)
-      })
   }
 
   filterPosts = (sorter, category) => {
@@ -115,13 +100,4 @@ function mapStateToProps ({ router, posts }) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setPosts: (data) => dispatch(setPosts(data)),
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ListView)
+export default connect(mapStateToProps)(ListView)

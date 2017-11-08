@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Route } from 'react-router'
+import thunkMiddleware from 'redux-thunk'
 import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 import './index.css'
@@ -9,6 +10,7 @@ import reducers from './reducers'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux'
+import { fetchPostsIfNeeded } from './actions'
 
 const history = createHistory()
 
@@ -28,9 +30,14 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   reducers,
   composeEnhancers(
-    applyMiddleware(middleware)
+    applyMiddleware(
+      middleware,
+      thunkMiddleware
+    )
   )
 )
+
+store.dispatch(fetchPostsIfNeeded())
 
 ReactDOM.render(
   <Provider store={store}>

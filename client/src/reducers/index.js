@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import {
-  SET_POSTS,
+  RECEIVE_POSTS,
   ADD_POST,
   DELETE_POST,
   UP_VOTE_POST,
@@ -21,7 +21,7 @@ import {
 var initialPostsState = []
 function posts(state = initialPostsState, action) {
   switch (action.type) {
-    case SET_POSTS:
+    case RECEIVE_POSTS:
       return [
         ...action.posts
       ]
@@ -99,7 +99,6 @@ function comments(state = initialCommentsState, action) {
     case DELETE_COMMENT:
       var activeComment = state[postId]
         .filter((comment) => comment.id === commentId)[0]
-        console.log('activeComment', activeComment)
       activeComment.deleted = true
       return {
         ...state,

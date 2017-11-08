@@ -1,5 +1,5 @@
-const url = 'localhost'
-const port = '3001'
+const url = `localhost`
+const port = `3001`
 const prefix = `http://` + url + `:` + port
 
 export function getPosts() {
