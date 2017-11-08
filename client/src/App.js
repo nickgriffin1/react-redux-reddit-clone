@@ -1,16 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react'
 import MyNavbar from './components/Navbar'
 import MainView from './components/MainView'
 
-class App extends Component {
-  render() {
-    return (
-      <div className='App'>
-        <MyNavbar />
-        <MainView />
-      </div>
-    );
-  }
+const App = function() {
+  return (
+    <div className='App'>
+      <MyNavbar />
+      <MainView />
+    </div>
+  )
 }
 
 export default App
