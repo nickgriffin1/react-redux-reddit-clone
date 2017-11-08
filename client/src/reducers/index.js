@@ -99,13 +99,14 @@ function comments(state = initialCommentsState, action) {
     case DELETE_COMMENT:
       var activeComment = state[postId]
         .filter((comment) => comment.id === commentId)[0]
+        console.log('activeComment', activeComment)
       activeComment.deleted = true
       return {
         ...state,
-        [postId]: {
+        [postId]: [
           ...state[postId].filter(comment => comment.id !== action.commentId),
           activeComment
-        }
+        ]
       }
     case UP_VOTE_COMMENT:
       activeComment = state[postId]
