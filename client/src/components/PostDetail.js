@@ -138,162 +138,171 @@ class PostDetail extends React.Component {
   }
 
   render() {
+    console.log('this.props', this.props.posts.filter(post => post.id === this.props.postId)[0])
     const comments = this.props.comments[this.props.postId]
+    const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
     return (
       <Row>
-        <Col xs={12} lg={8} lgOffset={2} className='post-detail'>
-          <Row>
-            <Col xs={1}>
-              <Score postId={this.props.postId} />
-            </Col>
-            <Col xs={11}>
-              <Row>
-                <Col xs={9}>
-                  <h3 className='post-detail-title'>{this.state.title}</h3>
-                </Col>
-                <Col xs={2}>
-                  <Link to={'/' + this.props.category + '/' + this.props.postId + '/edit/'}>
-                    <Button style={{ float: 'right'}}>
-                      <h5>
-                        <Glyphicon glyph='pencil' /> Edit
-                      </h5>
-                    </Button>
-                  </Link>
-                </Col>
-              </Row>
-              <h4 className='post-detail-body'>{this.state.body}</h4>
-              <h4 className='post-detail-author'><Glyphicon glyph='user' /> {this.state.author}</h4>
-              <h4 className='post-detail-category'><Glyphicon glyph='list' /> {this.state.category}</h4>
-              <h4 className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(this.state.date, true)}</h4>
-            </Col>
-          </Row>
-        </Col>
-        <Col xs={12} lg={8} lgOffset={2} className='post-comments'>
-          <Row>
-            <Col xs={10} xsOffset={1}>
-              {this.state.commenting === true ?
+        {post && post.deleted ? (
+            <h1 className='text-center'>Post Deleted</h1>
+          ) : (
+            <div>
+              <Col xs={12} lg={8} lgOffset={2} className='post-detail'>
                 <Row>
-                  <Col xs={9}>
-                    <input
-                      type='text'
-                      style={{ width: '100%', color: 'black' }}
-                      onChange={(event) => this.setState({ newCommentBody: event.target.value })}
-                    />
+                  <Col xs={1}>
+                    <Score postId={this.props.postId} />
                   </Col>
-                  <Col xs={3}>
-                    <Button
-                      bsStyle='success'
-                      style={{ marginRight: '1rem' }}
-                      onClick={this.submitNewComment}
-                    >Submit</Button>
-                    <Button bsStyle='warning' onClick={this.cancelNewComment}>Cancel</Button>
+                  <Col xs={11}>
+                    <Row>
+                      <Col xs={9}>
+                        <h3 className='post-detail-title'>{this.state.title}</h3>
+                      </Col>
+                      <Col xs={2}>
+                        <Link to={'/' + this.props.category + '/' + this.props.postId + '/edit/'}>
+                          <Button style={{ float: 'right'}}>
+                            <h5>
+                              <Glyphicon glyph='pencil' /> Edit
+                            </h5>
+                          </Button>
+                        </Link>
+                      </Col>
+                    </Row>
+                    <h4 className='post-detail-body'>{this.state.body}</h4>
+                    <h4 className='post-detail-author'><Glyphicon glyph='user' /> {this.state.author}</h4>
+                    <h4 className='post-detail-category'><Glyphicon glyph='list' /> {this.state.category}</h4>
+                    <h4 className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(this.state.date, true)}</h4>
                   </Col>
-                </Row>:
-                <Button bsStyle='primary' onClick={() => this.setState({ commenting: true })}>
-                  <Glyphicon glyph='plus' /> Add a Comment
-                </Button>
-              }
-              <hr />
-            </Col>
-            <Col xs={10} xsOffset={1}>
-              <Row>
-                <Col xs={10}>
-                  {/*}<h4>{this.state.numComments} comments</h4>*/}
-                </Col>
-                <Col xs={2}>
-                  {this.state.showComments === true ?
-                    <Button
-                      className='post-detail-comments-button'
-                      onClick={() => this.setState({ showComments: false })}
-                    >
-                      <Glyphicon glyph='eye-close' /> Hide
-                    </Button> :
-                    <Button
-                      className='post-detail-comments-button'
-                      onClick={() => this.setState({ showComments: true })}
-                    >
-                      <Glyphicon glyph='eye-open' /> Show
-                    </Button>
-                  }
-                </Col>
-              </Row>
-              {comments && this.state.showComments &&
-                comments.filter(comment => comment.deleted === false)
-                  .sort((a, b) => b.voteScore - a.voteScore)
-                  .map(comment => (
-                    <div key={comment.id}>
-                      <hr />
+                </Row>
+              </Col>
+              <Col xs={12} lg={8} lgOffset={2} className='post-comments'>
+                <Row>
+                  <Col xs={10} xsOffset={1}>
+                    {this.state.commenting === true ?
                       <Row>
-                        <Col xs={10}>
-                          {comment.editing === true ?
-                            <div>
-                              <input
-                                type='text'
-                                style={{ color: 'black', width: '70%', marginRight: '1rem' }}
-                                value={comment.temporaryBody || comment.body}
-                                onChange={(event) => this.handleCommentChange(event, comment.id)}
-                              />
-                              <Button
-                                type='submit'
-                                bsStyle='success'
-                                onClick={() => this.updateComment(comment)}
-                              >Submit</Button>
-                              <Button
-                                type='submit'
-                                bsStyle='warning'
-                                style={{ marginLeft: '1rem' }}
-                                onClick={() => this.cancelUpdateComment(comment.id)}
-                              >Cancel</Button>
-                            </div>:
-                            <p className='post-detail-comment'>{comment.body}</p>
-                          }
-                          <Row>
-                            <Col xs={3}>
-                              <p>
-                                <span>{comment.voteScore} </span>
-                                <span><Glyphicon
-                                    glyph='plus'
-                                    style={{ color: 'green' }}
-                                    className={comment.hasVoted ? 'disabled' : null}
-                                    onClick={() => this.voteComment('up', comment.id, comment.hasVoted)}
-                                  /> </span>
-                                <Glyphicon
-                                  glyph='minus'
-                                  className={comment.hasVoted ? 'disabled' : null}
-                                  style={{ color: 'red' }}
-                                  onClick={() => this.voteComment('down', comment.id, comment.hasVoted)}
-                                />
-                              </p>
-                            </Col>
-                            <Col xs={3}>
-                              <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
-                            </Col>
-                            <Col xs={3}>
-                              <p className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(comment.timestamp, true)}</p>
-                            </Col>
-                          </Row>
+                        <Col xs={9}>
+                          <input
+                            type='text'
+                            style={{ width: '100%', color: 'black' }}
+                            onChange={(event) => this.setState({ newCommentBody: event.target.value })}
+                          />
                         </Col>
-                        <Col xs={2}>
-                          {comment.editing ?
-                            <Button
-                              style={{ float: 'left' }}
-                              bsStyle='danger'
-                              onClick={() => this.deleteComment(comment.id)}
-                            >Delete</Button> :
-                            <Button
-                              style={{ float: 'right' }}
-                              bsStyle='primary'
-                              onClick={() => this.initializeEditComment(comment.id)}
-                            >Edit</Button>
-                          }
+                        <Col xs={3}>
+                          <Button
+                            bsStyle='success'
+                            style={{ marginRight: '1rem' }}
+                            onClick={this.submitNewComment}
+                          >Submit</Button>
+                          <Button bsStyle='warning' onClick={this.cancelNewComment}>Cancel</Button>
                         </Col>
-                      </Row>
-                    </div>
-                  )
-              )}
-            </Col>
-          </Row>
-        </Col>
+                      </Row>:
+                      <Button bsStyle='primary' onClick={() => this.setState({ commenting: true })}>
+                        <Glyphicon glyph='plus' /> Add a Comment
+                      </Button>
+                    }
+                    <hr />
+                  </Col>
+                  <Col xs={10} xsOffset={1}>
+                    <Row>
+                      <Col xs={10}>
+                        {/*}<h4>{this.state.numComments} comments</h4>*/}
+                      </Col>
+                      <Col xs={2}>
+                        {this.state.showComments === true ?
+                          <Button
+                            className='post-detail-comments-button'
+                            onClick={() => this.setState({ showComments: false })}
+                          >
+                            <Glyphicon glyph='eye-close' /> Hide
+                          </Button> :
+                          <Button
+                            className='post-detail-comments-button'
+                            onClick={() => this.setState({ showComments: true })}
+                          >
+                            <Glyphicon glyph='eye-open' /> Show
+                          </Button>
+                        }
+                      </Col>
+                    </Row>
+                    {comments && this.state.showComments &&
+                      comments.filter(comment => comment.deleted === false)
+                        .sort((a, b) => b.voteScore - a.voteScore)
+                        .map(comment => (
+                          <div key={comment.id}>
+                            <hr />
+                            <Row>
+                              <Col xs={10}>
+                                {comment.editing === true ?
+                                  <div>
+                                    <input
+                                      type='text'
+                                      style={{ color: 'black', width: '70%', marginRight: '1rem' }}
+                                      value={comment.temporaryBody || comment.body}
+                                      onChange={(event) => this.handleCommentChange(event, comment.id)}
+                                    />
+                                    <Button
+                                      type='submit'
+                                      bsStyle='success'
+                                      onClick={() => this.updateComment(comment)}
+                                    >Submit</Button>
+                                    <Button
+                                      type='submit'
+                                      bsStyle='warning'
+                                      style={{ marginLeft: '1rem' }}
+                                      onClick={() => this.cancelUpdateComment(comment.id)}
+                                    >Cancel</Button>
+                                  </div>:
+                                  <p className='post-detail-comment'>{comment.body}</p>
+                                }
+                                <Row>
+                                  <Col xs={3}>
+                                    <p>
+                                      <span>{comment.voteScore} </span>
+                                      <span><Glyphicon
+                                          glyph='plus'
+                                          style={{ color: 'green' }}
+                                          className={comment.hasVoted ? 'disabled' : null}
+                                          onClick={() => this.voteComment('up', comment.id, comment.hasVoted)}
+                                        /> </span>
+                                      <Glyphicon
+                                        glyph='minus'
+                                        className={comment.hasVoted ? 'disabled' : null}
+                                        style={{ color: 'red' }}
+                                        onClick={() => this.voteComment('down', comment.id, comment.hasVoted)}
+                                      />
+                                    </p>
+                                  </Col>
+                                  <Col xs={3}>
+                                    <p className='post-detail-author'><Glyphicon glyph='user' /> {comment.author}</p>
+                                  </Col>
+                                  <Col xs={3}>
+                                    <p className='post-detail-time'><Glyphicon glyph='time' /> {formatDate(comment.timestamp, true)}</p>
+                                  </Col>
+                                </Row>
+                              </Col>
+                              <Col xs={2}>
+                                {comment.editing ?
+                                  <Button
+                                    style={{ float: 'left' }}
+                                    bsStyle='danger'
+                                    onClick={() => this.deleteComment(comment.id)}
+                                  >Delete</Button> :
+                                  <Button
+                                    style={{ float: 'right' }}
+                                    bsStyle='primary'
+                                    onClick={() => this.initializeEditComment(comment.id)}
+                                  >Edit</Button>
+                                }
+                              </Col>
+                            </Row>
+                          </div>
+                        )
+                    )}
+                  </Col>
+                </Row>
+              </Col>
+            </div>
+          )
+        }
       </Row>
     )
   }
