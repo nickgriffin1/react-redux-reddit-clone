@@ -7,29 +7,23 @@ class Score extends Component {
 	componentDidMount() {
 		const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
 		if(post) {
-			this.setState({ score: post.voteScore })
+			this.setState({ post })
 		}
 	}
 
-	componentDidUpdate(prevProps) {
-		const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
-		const prevPost = prevProps.posts.filter(post => post.id === prevProps.postId)[0]
-		if (post !== prevPost) {
-      this.setState({ score: post.voteScore })
-    }
-  }
-
   changeScore = (type) => {
-		if (this.state.post.hasVoted !== true) {
+		const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
+		if (post.hasVoted !== true) {
 	    if(type === 'upvote') {
-				this.props.upVotePost({ postId: this.state.post.id })
+				this.props.upVotePost({ postId: post.id })
 			} else if (type === 'downvote') {
-				this.props.downVotePost({ postId: this.state.post.id })
+				this.props.downVotePost({ postId: post.id })
 			}
 		}
   }
 
   render() {
+		const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
   	return (
   		<Row>
 	      <Col xs={12} onClick={() => this.changeScore('upvote')}>
@@ -37,7 +31,7 @@ class Score extends Component {
 	      </Col>
 
 	      <Col xs={12}>
-	        <h3 className='post-score'>{this.state && this.state.score}</h3>
+	        <h3 className='post-score'>{post && post.voteScore}</h3>
 	      </Col>
 
 	      <Col xs={12} onClick={() => this.changeScore('downvote')}>

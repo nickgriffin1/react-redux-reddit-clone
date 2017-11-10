@@ -138,7 +138,7 @@ class PostDetail extends React.Component {
   }
 
   render() {
-    console.log('this.props', this.props.posts.filter(post => post.id === this.props.postId)[0])
+    // assign some variables to make our lives easier
     const comments = this.props.comments[this.props.postId]
     const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
     return (
