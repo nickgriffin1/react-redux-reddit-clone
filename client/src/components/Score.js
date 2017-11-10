@@ -14,7 +14,6 @@ class Score extends Component {
 	componentDidUpdate(prevProps) {
 		const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
 		const prevPost = prevProps.posts.filter(post => post.id === prevProps.postId)[0]
-		console.log('post', post)
 		if (post !== prevPost) {
       this.setState({ score: post.voteScore })
     }
@@ -31,7 +30,6 @@ class Score extends Component {
   }
 
   render() {
-		console.log('this.props', this.props)
   	return (
   		<Row>
 	      <Col xs={12} onClick={() => this.changeScore('upvote')}>

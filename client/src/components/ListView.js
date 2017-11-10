@@ -10,15 +10,24 @@ class ListView extends Component {
     loading: true
   }
 
+  componentDidMount() {
+    if(this.props.filter) {
+      this.filterPosts('category', this.props.filter)
+    } 
+  }
+
   componentDidUpdate(prevProps) {
     // reset filtered posts when on main page
     if(this.props.router.location.pathname === '/' && prevProps.router.location.pathname !== '/') {
       this.setState({ filteredPosts: this.props.posts })
     }
-
     // set posts once async call has finished
     if (prevProps.posts.length === 0 && this.props.posts.length > 0) {
-      this.filterPosts(null, this.props.filter)
+      if(this.props.filter) {
+        this.filterPosts('category', this.props.filter)
+      } else {
+        this.setState({ filteredPosts: this.props.posts })
+      }
     }
   }
 

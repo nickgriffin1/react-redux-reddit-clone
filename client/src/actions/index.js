@@ -111,7 +111,8 @@ function fetchComments(postId) {
 
 export function fetchCommentsIfNeeded(postId) {
   return (dispatch, getState) => {
-    if (shouldFetchListItem(getState(), 'comments', postId)) {
+    console.log(getState().comments)
+    if (shouldFetchListItem(getState().comments, postId)) {
       return dispatch(fetchComments(postId))
     } else {
       return Promise.resolve()

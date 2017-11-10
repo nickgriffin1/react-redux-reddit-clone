@@ -14,17 +14,9 @@ export function formatDate(ts, fullDate) {
 }
 
 // this is probably way more complex than it needs to be
-export function shouldFetchListItem(state, item, modifier) {
+export function shouldFetchListItem(state, item) {
   var len
-  if (modifier) {
-    if (Object.keys(state[item]).length === 0) {
-      // return true if object is empty
-      return true
-    } else {
-      // look for property in object
-      len = state[item][modifier].length
-    }
-  } else {
+  if (state[item]) {
     len = state[item].length
   }
   // final check if not previously caught
