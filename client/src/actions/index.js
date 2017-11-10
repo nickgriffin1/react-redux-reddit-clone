@@ -1,4 +1,5 @@
-import { getPosts } from '../utils/api'
+import { getPosts, getPostComments, getCategories } from '../utils/api'
+import { shouldFetchListItem } from '../utils/shared'
 
 // Posts
 // lines 12-54 modified verison of https://redux.js.org/docs/advanced/AsyncActions.html
@@ -16,18 +17,9 @@ function fetchPosts() {
   }
 }
 
-function shouldFetchPosts(state) {
-  const posts = state.posts
-  if (posts.length === 0) {
-    return true
-  } else {
-    return false
-  }
-}
-
 export function fetchPostsIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchPosts(getState())) {
+    if (shouldFetchListItem(getState(), 'posts')) {
       return dispatch(fetchPosts())
     } else {
       return Promise.resolve()
@@ -77,21 +69,53 @@ export function downVotePost({ postId }) {
 }
 
 // Categories
-export const SET_CATEGORIES = 'SET_CATEGORIES'
-export function setCategories({ categories }) {
+export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
+function receiveCategories(categories) {
   return {
-    type: SET_CATEGORIES,
+    type: RECEIVE_CATEGORIES,
     categories
   }
 }
 
+function fetchCategories() {
+  return dispatch => {
+    return getCategories().then(categories => dispatch(receiveCategories(categories)))
+  }
+}
+
+export function fetchCategoriesIfNeeded() {
+  return (dispatch, getState) => {
+    if (shouldFetchListItem(getState(), 'categories')) {
+      return dispatch(fetchCategories())
+    } else {
+      return Promise.resolve()
+    }
+  }
+}
+
 // Comments
-export const SET_COMMENTS = 'SET_COMMENTS'
-export function setComments({ postId, comments }) {
+export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
+function receiveComments({ postId, comments }) {
   return {
-    type: SET_COMMENTS,
+    type: RECEIVE_COMMENTS,
     postId,
     comments
+  }
+}
+
+function fetchComments(postId) {
+  return dispatch => {
+    return getPostComments(postId).then(comments => dispatch(receiveComments({ postId, comments })))
+  }
+}
+
+export function fetchCommentsIfNeeded(postId) {
+  return (dispatch, getState) => {
+    if (shouldFetchListItem(getState(), 'comments', postId)) {
+      return dispatch(fetchComments(postId))
+    } else {
+      return Promise.resolve()
+    }
   }
 }
 

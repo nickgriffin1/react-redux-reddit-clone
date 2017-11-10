@@ -8,9 +8,9 @@ import {
   DOWN_VOTE_POST,
   EDIT_POST,
 
-  SET_CATEGORIES,
+  RECEIVE_CATEGORIES,
 
-  SET_COMMENTS,
+  RECEIVE_COMMENTS,
   ADD_COMMENT,
   DELETE_COMMENT,
   UP_VOTE_COMMENT,
@@ -69,9 +69,8 @@ var initialCategoriesState = []
 function categories(state = initialCategoriesState, action) {
   // TODO create functionality for creating categories
   switch(action.type) {
-    case SET_CATEGORIES:
+    case RECEIVE_CATEGORIES:
       return [
-        ...state,
         ...action.categories
       ]
     default:
@@ -83,7 +82,7 @@ var initialCommentsState = {}
 function comments(state = initialCommentsState, action) {
   const { comments, comment, commentId, postId } = action
   switch(action.type) {
-    case SET_COMMENTS:
+    case RECEIVE_COMMENTS:
       return {
         ...state,
         [postId]: comments

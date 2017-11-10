@@ -2,25 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap'
-import { getCategories } from '../utils/api'
-import { setCategories } from '../actions'
 
 class CategoryView extends Component {
-  state = {
-    categories: []
-  }
-
-  componentDidMount() {
-    // initialize categories if not set
-    if (this.props.categories.length < 1) {
-      Promise
-        .resolve(getCategories())
-        .then((categories) => {
-          this.props.setCategories({ categories })
-        })
-    }
-  }
-
   render() {
     return (
       <Grid>
@@ -56,13 +39,4 @@ function mapStateToProps ({ categories }) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setCategories: (data) => dispatch(setCategories(data)),
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CategoryView)
+export default connect(mapStateToProps)(CategoryView)

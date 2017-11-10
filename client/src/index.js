@@ -10,7 +10,7 @@ import reducers from './reducers'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux'
-import { fetchPostsIfNeeded } from './actions'
+import { fetchPostsIfNeeded, fetchCategoriesIfNeeded } from './actions'
 
 const history = createHistory()
 
@@ -37,7 +37,9 @@ const store = createStore(
   )
 )
 
+// set initial states of posts and categories
 store.dispatch(fetchPostsIfNeeded())
+store.dispatch(fetchCategoriesIfNeeded())
 
 ReactDOM.render(
   <Provider store={store}>

@@ -2,13 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Form, FormGroup, FormControl, ControlLabel, Button, Row, Col, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap'
-import { addPost, editPost, deletePost, setCategories } from '../actions'
-import { getPost, getCategories } from '../utils/api'
+import { addPost, editPost, deletePost } from '../actions'
 import { capitalize } from '../utils/shared'
 
 class AddView extends Component {
   state = {
-    categories: [],
     title: '',
     body: '',
     author: '',
@@ -17,25 +15,18 @@ class AddView extends Component {
   }
 
   componentDidMount() {
-    // set categories if not already set
-    if(this.props.categories.length === 0) {
-      Promise.resolve(getCategories()).then((categories) => {
-        this.props.setCategories({ categories })
-      })
-    }
-
     if (this.props.mode === 'editing') {
-      Promise.resolve(getPost(this.props.postId)).then((post) => {
-        this.setState({
-          postId: post.id,
-          title: post.title,
-          body: post.body,
-          author: post.author,
-          category: capitalize(post.category),
-          voteScore: post.voteScore
-        })
+      const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
+      this.setState({
+        postId: post.id,
+        title: post.title,
+        body: post.body,
+        author: post.author,
+        category: capitalize(post.category),
+        voteScore: post.voteScore
       })
     } else {
+      // clear out any left overs
       this.setState({
         postId: '',
         title: '',
@@ -187,9 +178,11 @@ class AddView extends Component {
   }
 }
 
-function mapStateToProps ({ categories, router }) {
+function mapStateToProps ({ posts, categories, router }) {
   return {
-    categories
+    posts,
+    categories,
+    router
   }
 }
 
@@ -198,7 +191,6 @@ function mapDispatchToProps(dispatch) {
     addPost: data => dispatch(addPost(data)),
     editPost: data => dispatch(editPost(data)),
     deletePost: data => dispatch(deletePost(data)),
-    setCategories: data => dispatch(setCategories(data)),
   }
 }
 

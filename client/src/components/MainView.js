@@ -12,10 +12,10 @@ const MainView = function() {
     	<Switch>
         <Route exact path='/' component={ListView} />
         <Route exact path='/categories' component={CategoryView} />
+        <Route exact path='/add' component={AddView} />
         <Route exact path='/:category' render={({ match }) => (
         	<ListView filter={match.params.category} />
         )}/>
-        <Route exact path='/add' component={AddView} />
         <Route exact path='/:category/:post' render={({ match }) => (
           <PostDetail
             category={match.params.category}

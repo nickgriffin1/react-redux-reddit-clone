@@ -6,7 +6,7 @@ import { capitalize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
-    filteredPosts: [],
+    filteredPosts: this.props.posts,
     loading: true
   }
 
@@ -18,14 +18,7 @@ class ListView extends Component {
 
     // set posts once async call has finished
     if (prevProps.posts.length === 0 && this.props.posts.length > 0) {
-      this.setFilteredPosts()
-    }
-  }
-
-  setFilteredPosts = () => {
-    this.setState({ filteredPosts: this.props.posts })
-    if (this.props.filter !== undefined) {
-      this.filterPosts('category', this.props.filter)
+      this.filterPosts(null, this.props.filter)
     }
   }
 

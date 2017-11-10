@@ -4,14 +4,13 @@ import { Link } from 'react-router-dom'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import Score from './Score'
 import {
-  setComments,
   deleteComment,
   editComment,
   addComment,
   upVoteComment,
   downVoteComment,
+  fetchCommentsIfNeeded
 } from '../actions'
-import { getPost, getPostComments } from '../utils/api'
 import { capitalize, formatDate } from '../utils/shared'
 
 class PostDetail extends React.Component {
@@ -22,28 +21,35 @@ class PostDetail extends React.Component {
   }
 
   componentDidMount() {
-    Promise.resolve(getPost(this.props.postId))
-      .then(post => {
-        this.setState({
-          title: post.title,
-          body: post.body,
-          author: post.author,
-          category: capitalize(post.category),
-          date: post.timestamp,
-          score: post.voteScore
-        })
+    const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
+    if(post) {
+      this.setState({
+        title: post.title,
+        body: post.body,
+        author: post.author,
+        category: capitalize(post.category),
+        date: post.timestamp,
+        score: post.voteScore
       })
+    }
 
-    Promise.resolve(getPostComments(this.props.postId))
-      .then(comments => {
-        // needed to account for deleted comments
-        const commentsLen = comments.filter((comment) => comment.deleted === false).length
-        this.setState({
-          comments,
-          numComments: commentsLen
-        })
-        this.props.setPostComments({ postId: this.props.postId, comments })
+    this.props.fetchCommentsIfNeeded(this.props.postId)
+  }
+
+  componentDidUpdate(prevProps) {
+    // make sure post is loaded if failed in componentDidMount
+    const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
+    const prevPost = prevProps.posts.filter(post => post.id === this.props.postId)[0]
+    if(post !== prevPost) {
+      this.setState({
+        title: post.title,
+        body: post.body,
+        author: post.author,
+        category: capitalize(post.category),
+        date: post.timestamp,
+        score: post.voteScore
       })
+    }
   }
 
   submitNewComment = () => {
@@ -58,10 +64,7 @@ class PostDetail extends React.Component {
       deleted: false
     }
     this.props.addComment({ postId: this.props.postId, comment: newComment })
-    const comments = Object.assign([], this.state.comments)
-    comments.push(newComment)
     this.setState(prevState => ({
-      comments,
       commenting: false,
       numComments: prevState.numComments + 1
     }))
@@ -195,7 +198,7 @@ class PostDetail extends React.Component {
             <Col xs={10} xsOffset={1}>
               <Row>
                 <Col xs={10}>
-                  <h4>{this.state.numComments} comments</h4>
+                  {/*}<h4>{this.state.numComments} comments</h4>*/}
                 </Col>
                 <Col xs={2}>
                   {this.state.showComments === true ?
@@ -296,20 +299,22 @@ class PostDetail extends React.Component {
   }
 }
 
-function mapStateToProps ({ comments }) {
+function mapStateToProps ({ posts, comments }) {
   return {
+    posts,
     comments,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setPostComments: data => dispatch(setComments(data)),
+    //setPostComments: data => dispatch(setComments(data)),
     deletePostComment: data => dispatch(deleteComment(data)),
     editComment: data => dispatch(editComment(data)),
     addComment: data => dispatch(addComment(data)),
     upVoteComment: data => dispatch(upVoteComment(data)),
     downVoteComment: data => dispatch(downVoteComment(data)),
+    fetchCommentsIfNeeded: data => dispatch(fetchCommentsIfNeeded(data))
   }
 }
 
