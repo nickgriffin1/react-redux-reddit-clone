@@ -60,7 +60,7 @@ class PostDetail extends React.Component {
       body: this.state.newCommentBody,
       // users not yet implemented
       author: this.props.user || 'you',
-      voteScore: 0,
+      voteScore: 1,
       deleted: false
     }
     this.props.addComment({ postId: this.props.postId, comment: newComment })
@@ -75,55 +75,33 @@ class PostDetail extends React.Component {
     this.setState({ commenting: false })
   }
 
-  updateCommentUtil = (commentId, selector, newValue, finished) => {
-    // create new object so that original isn't directly edited
-    const newComments = Object.assign([], this.state.comments)
-    // divide the comment to edit from all other comments
-    const updatedComments = newComments.filter((comment) => commentId === comment.id)
-    const otherComments = newComments.filter((comment) => commentId !== comment.id)
-    // edit the property
-    updatedComments[0][selector] = newValue
-    // set to finished if needed
-    if (finished) {
-      updatedComments[0].editing = false
-    }
-    // add all other comments
-    updatedComments.push(...otherComments)
-    // of course update state
-    this.setState({ comments: updatedComments })
-  }
-
   deleteComment = (commentId) => {
-    //this.updateCommentUtil(commentId, 'deleted', true, true)
-    // also need to update comment amount
     this.setState((prevState) => ({
-      numComments: prevState.numComments - 1
+      numComments: prevState.numComments - 1,
+      editing: null
     }))
     this.props.deletePostComment({ postId: this.props.postId, commentId })
-    // used to close editing
-    this.updateCommentUtil(commentId, null, null, true)
   }
 
   initializeEditComment = (commentId) => {
-    this.updateCommentUtil(commentId, 'editing', true)
+    this.setState({ editing: commentId })
   }
 
   updateComment = (comment) => {
-    //this.updateCommentUtil(commentId, 'body', newValue, true)
     this.props.editComment({
       postId: this.props.postId,
       comment
     })
     // used to close editing
-    this.updateCommentUtil(comment.id, null, null, true)
+    this.setState({ editing: null, temporaryBody: null })
   }
 
   cancelUpdateComment = (commentId) => {
-    this.updateCommentUtil(commentId, null, null, true)
+    this.setState({ editing: null })
   }
 
   handleCommentChange = (event, commentId) => {
-    this.updateCommentUtil(commentId, 'temporaryBody', event.target.value)
+    this.setState({ temporaryBody: event.target.value })
   }
 
   voteComment = (type, commentId, hasVoted) => {
@@ -231,12 +209,12 @@ class PostDetail extends React.Component {
                             <hr />
                             <Row>
                               <Col xs={10}>
-                                {comment.editing === true ?
+                                {comment.id === this.state.editing ?
                                   <div>
                                     <input
                                       type='text'
                                       style={{ color: 'black', width: '70%', marginRight: '1rem' }}
-                                      value={comment.temporaryBody || comment.body}
+                                      value={this.state.temporaryBody || comment.body}
                                       onChange={(event) => this.handleCommentChange(event, comment.id)}
                                     />
                                     <Button
@@ -250,7 +228,7 @@ class PostDetail extends React.Component {
                                       style={{ marginLeft: '1rem' }}
                                       onClick={() => this.cancelUpdateComment(comment.id)}
                                     >Cancel</Button>
-                                  </div>:
+                                  </div> :
                                   <p className='post-detail-comment'>{comment.body}</p>
                                 }
                                 <Row>
@@ -280,7 +258,7 @@ class PostDetail extends React.Component {
                                 </Row>
                               </Col>
                               <Col xs={2}>
-                                {comment.editing ?
+                                {comment.id === this.state.editing ?
                                   <Button
                                     style={{ float: 'left' }}
                                     bsStyle='danger'
