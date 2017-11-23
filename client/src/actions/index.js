@@ -1,5 +1,6 @@
 import {
   getPostsApi,
+  editPostApi,
   addPostApi,
   votePostApi,
   deletePostApi,
@@ -60,6 +61,7 @@ export function deletePost({ postId }) {
 
 export const EDIT_POST = 'EDIT_POST'
 export function editPost({ postId, post }) {
+  editPostApi(post)
   return {
     type: EDIT_POST,
     postId,
@@ -158,7 +160,7 @@ export function deleteComment({ postId, commentId }) {
 
 export const UP_VOTE_COMMENT = 'UP_VOTE_COMMENT'
 export function upVoteComment({ postId, commentId }) {
-  voteCommentApi(commentId, 'upvote')
+  voteCommentApi(commentId, 'upVote')
   return {
     type: UP_VOTE_COMMENT,
     postId,
@@ -168,7 +170,7 @@ export function upVoteComment({ postId, commentId }) {
 
 export const DOWN_VOTE_COMMENT = 'DOWN_VOTE_COMNMENT'
 export function downVoteComment({ postId, commentId }) {
-  voteCommentApi(commentId, 'downvote')
+  voteCommentApi(commentId, 'downVote')
   return {
     type: DOWN_VOTE_COMMENT,
     postId,

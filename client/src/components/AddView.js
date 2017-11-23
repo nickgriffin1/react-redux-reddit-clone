@@ -33,6 +33,7 @@ class AddView extends Component {
         body: '',
         author: '',
         category: '',
+        mode: ''
       })
     }
   }
@@ -56,7 +57,7 @@ class AddView extends Component {
           body,
           author,
           category,
-          voteScore: this.state.voteScore || 0,
+          voteScore: this.state.voteScore || 1,
           deleted: false
         }
         // for editing a post
@@ -90,7 +91,7 @@ class AddView extends Component {
   }
 
   deletePost = () => {
-    this.props.deletePost({ postId: this.props.postId})
+    this.props.deletePost({ postId: this.props.postId })
   }
 
   render() {
@@ -128,6 +129,7 @@ class AddView extends Component {
                   className='add-form-text-box'
                   onChange={this.handleSetAuthor}
                   value={this.state.author}
+                  disabled={this.props.mode === 'editing' ? 'disabled' : null}
                 />
               </FormGroup>
 

@@ -15,7 +15,6 @@ import { capitalize, formatDate } from '../utils/shared'
 
 class PostDetail extends React.Component {
   state = {
-    numComments: 0,
     showComments: true,
     commenting: false
   }
@@ -49,6 +48,17 @@ class PostDetail extends React.Component {
         date: post.timestamp,
         score: post.voteScore
       })
+    }
+
+    const currentComments = this.props.comments[this.props.postId]
+    const prevComments = prevProps.comments[this.props.postId]
+    if (currentComments && prevComments) {
+      if (currentComments.length !== prevComments.length) {
+        console.log('comments', this.props.comments[this.props.postId])
+        this.setState({ numComments: currentComments.length })
+      }
+    } else if (currentComments && prevComments === undefined) {
+      this.setState({ numComments: currentComments.length })
     }
   }
 
@@ -88,6 +98,9 @@ class PostDetail extends React.Component {
   }
 
   updateComment = (comment) => {
+    // update the comment body to the input
+    comment.body = this.state.temporaryBody
+    // call the editComment action
     this.props.editComment({
       postId: this.props.postId,
       comment
@@ -182,7 +195,7 @@ class PostDetail extends React.Component {
                   <Col xs={10} xsOffset={1}>
                     <Row>
                       <Col xs={10}>
-                        {/*}<h4>{this.state.numComments} comments</h4>*/}
+                        {this.state.numComments} Comments
                       </Col>
                       <Col xs={2}>
                         {this.state.showComments === true ?
