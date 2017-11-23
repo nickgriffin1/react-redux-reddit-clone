@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import Score from './Score'
 import {
+  deletePost,
   deleteComment,
   editComment,
   addComment,
@@ -145,17 +146,27 @@ class PostDetail extends React.Component {
                   </Col>
                   <Col xs={11}>
                     <Row>
-                      <Col xs={9}>
+                      <Col xs={7}>
                         <h3 className='post-detail-title'>{this.state.title}</h3>
                       </Col>
                       <Col xs={2}>
                         <Link to={'/' + this.props.category + '/' + this.props.postId + '/edit/'}>
                           <Button style={{ float: 'right'}}>
                             <h5>
-                              <Glyphicon glyph='pencil' /> Edit
+                              <Glyphicon bsStyle='primary' glyph='pencil' /> Edit
                             </h5>
                           </Button>
                         </Link>
+                      </Col>
+                      <Col xs={2}>
+                        <Button
+                          bsStyle='danger'
+                          onClick={() => this.props.deletePost({ postId: this.props.postId })}
+                        >
+                          <h5>
+                            <Glyphicon glyph='remove' /> Delete
+                          </h5>
+                        </Button>
                       </Col>
                     </Row>
                     <h4 className='post-detail-body'>{this.state.body}</h4>
@@ -195,7 +206,7 @@ class PostDetail extends React.Component {
                   <Col xs={10} xsOffset={1}>
                     <Row>
                       <Col xs={10}>
-                        {this.state.numComments} Comments
+                        {this.state.numComments || 0} Comments
                       </Col>
                       <Col xs={2}>
                         {this.state.showComments === true ?
@@ -221,7 +232,7 @@ class PostDetail extends React.Component {
                           <div key={comment.id}>
                             <hr />
                             <Row>
-                              <Col xs={10}>
+                              <Col xs={9}>
                                 {comment.id === this.state.editing ?
                                   <div>
                                     <input
@@ -270,18 +281,20 @@ class PostDetail extends React.Component {
                                   </Col>
                                 </Row>
                               </Col>
-                              <Col xs={2}>
-                                {comment.id === this.state.editing ?
-                                  <Button
-                                    style={{ float: 'left' }}
-                                    bsStyle='danger'
-                                    onClick={() => this.deleteComment(comment.id)}
-                                  >Delete</Button> :
-                                  <Button
-                                    style={{ float: 'right' }}
-                                    bsStyle='primary'
-                                    onClick={() => this.initializeEditComment(comment.id)}
-                                  >Edit</Button>
+                              <Col xs={3}>
+                                {comment.id !== this.state.editing &&
+                                  <div>
+                                    <Button
+                                      style={{ float: 'right' }}
+                                      bsStyle='primary'
+                                      onClick={() => this.initializeEditComment(comment.id)}
+                                    >Edit</Button>
+                                    <Button
+                                      style={{ float: 'left' }}
+                                      bsStyle='danger'
+                                      onClick={() => this.deleteComment(comment.id)}
+                                    >Delete</Button>
+                                  </div>
                                 }
                               </Col>
                             </Row>
@@ -309,6 +322,7 @@ function mapStateToProps ({ posts, comments }) {
 function mapDispatchToProps(dispatch) {
   return {
     //setPostComments: data => dispatch(setComments(data)),
+    deletePost: data => dispatch(deletePost(data)),
     deletePostComment: data => dispatch(deleteComment(data)),
     editComment: data => dispatch(editComment(data)),
     addComment: data => dispatch(addComment(data)),

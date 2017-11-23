@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Col, Row, Button } from 'react-bootstrap'
 import Post from '../components/Post'
+import { deletePost, fetchCommentsIfNeeded } from '../actions'
 import { capitalize, formatDate } from '../utils/shared'
 
 class ListView extends Component {
   state = {
     filteredPosts: this.props.posts,
-    loading: true
   }
 
   componentDidMount() {
     if(this.props.filter) {
       this.filterPosts('category', this.props.filter)
-    } 
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -27,6 +27,15 @@ class ListView extends Component {
         this.filterPosts('category', this.props.filter)
       } else {
         this.setState({ filteredPosts: this.props.posts })
+      }
+    }
+
+    if (this.props.posts !== prevProps.posts) {
+      if (this.props.posts.length > 0) {
+        this.props.posts.forEach(post => {
+          console.log('post', post)
+          this.props.fetchCommentsIfNeeded(post.id)
+        })
       }
     }
   }
@@ -51,8 +60,15 @@ class ListView extends Component {
       this.setState({ filteredPosts: this.props.posts })
     }
   }
-
+  getNumComments = postId => {
+    if (this.props.comments[postId]) {
+      return this.props.comments[postId].length
+    } else {
+      return 0
+    }
+  }
   render() {
+    console.log('this.state', this.state)
     return (
       <Grid>
         <Row className='post-container post-container-buttons'>
@@ -88,6 +104,8 @@ class ListView extends Component {
               category={post.category}
               score={post.voteScore}
               date={formatDate(post.timestamp)}
+              numComments={this.getNumComments(post.id)}
+              onDeletePost={() => this.props.deletePost({ postId: post.id })}
             />
         ))}
       </Grid>
@@ -95,11 +113,19 @@ class ListView extends Component {
   }
 }
 
-function mapStateToProps ({ router, posts }) {
+function mapStateToProps({ router, posts, comments }) {
   return {
     router,
     posts,
+    comments
   }
 }
 
-export default connect(mapStateToProps)(ListView)
+function mapDispatchToProps(dispatch) {
+  return {
+    deletePost: data => dispatch(deletePost(data)),
+    fetchCommentsIfNeeded: data => dispatch(fetchCommentsIfNeeded(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListView)
