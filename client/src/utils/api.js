@@ -19,12 +19,10 @@ export function getPostsApi() {
 }
 
 export function editPostApi(post) {
-  console.log('editpost', post)
   const data = {
     title: post.title,
     body: post.body
   }
-  console.log('data', data)
   const obj = {
     'method': 'PUT',
     'body': JSON.stringify(data),
@@ -32,7 +30,6 @@ export function editPostApi(post) {
       'Authorization': 'the-answer-is-42'
     }
   }
-  console.log('obj', obj)
   return fetch(prefix + `/posts/` + post.id, obj)
     .then(res => res.json())
     .catch(e => {

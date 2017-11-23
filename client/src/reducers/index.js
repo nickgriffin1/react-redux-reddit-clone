@@ -55,7 +55,6 @@ function posts(state = initialPostsState, action) {
         curPost
       ]
     case EDIT_POST:
-      console.log('action', action)
       return [
         ...state.filter(post => post.id !== action.postId),
         action.post

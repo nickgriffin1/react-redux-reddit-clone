@@ -33,7 +33,6 @@ class ListView extends Component {
     if (this.props.posts !== prevProps.posts) {
       if (this.props.posts.length > 0) {
         this.props.posts.forEach(post => {
-          console.log('post', post)
           this.props.fetchCommentsIfNeeded(post.id)
         })
       }
@@ -42,17 +41,14 @@ class ListView extends Component {
 
   filterPosts = (sorter, category) => {
     if (sorter === 'top') {
-      console.log('sorting by points')
       this.setState((prevState) => {
         return { filteredPosts: prevState.filteredPosts.sort((post) => { return post.voteScore }).reverse() }
       })
     } else if (sorter === 'date') {
-      console.log('sorting by date')
       this.setState((prevState) => {
         return { filteredPosts: prevState.filteredPosts.sort((a, b) => { return b.timestamp - a.timestamp }) }
       })
     } else if (sorter === 'category') {
-      console.log('sorting by category')
       this.setState({
         filteredPosts: this.props.posts.filter((post) => { return post.category === category})
       })
@@ -68,7 +64,6 @@ class ListView extends Component {
     }
   }
   render() {
-    console.log('this.state', this.state)
     return (
       <Grid>
         <Row className='post-container post-container-buttons'>

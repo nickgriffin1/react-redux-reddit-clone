@@ -55,7 +55,6 @@ class PostDetail extends React.Component {
     const prevComments = prevProps.comments[this.props.postId]
     if (currentComments && prevComments) {
       if (currentComments.length !== prevComments.length) {
-        console.log('comments', this.props.comments[this.props.postId])
         this.setState({ numComments: currentComments.length })
       }
     } else if (currentComments && prevComments === undefined) {
