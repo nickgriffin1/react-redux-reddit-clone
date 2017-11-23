@@ -133,7 +133,6 @@ function comments(state = initialCommentsState, action) {
     case EDIT_COMMENT:
       activeComment = state[postId]
         .filter((comment) => comment.id === action.comment.id)[0]
-      activeComment.body = action.comment.temporaryBody
       return {
         ...state,
         [postId]: [

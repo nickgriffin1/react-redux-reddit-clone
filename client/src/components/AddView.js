@@ -33,7 +33,6 @@ class AddView extends Component {
         body: '',
         author: '',
         category: '',
-        mode: ''
       })
     }
   }
@@ -41,7 +40,6 @@ class AddView extends Component {
   handleFormSubmit = (event) => {
     // stop default serialization
     event.preventDefault()
-
     // dispatch addPost if all posts are populated
     const { title, body, author, category } = this.state
     if (title.length > 0 && body.length > 0 && author.length > 0 && category.length > 0) {
