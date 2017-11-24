@@ -134,7 +134,7 @@ class PostDetail extends React.Component {
     const post = this.props.posts.filter(post => post.id === this.props.postId)[0]
     return (
       <Row>
-        {post && post.deleted ? (
+        {!post || post.deleted ? (
             <h1 className='text-center'>Post Deleted</h1>
           ) : (
             <div>

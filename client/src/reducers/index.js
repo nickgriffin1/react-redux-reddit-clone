@@ -22,24 +22,21 @@ var initialPostsState = []
 function posts(state = initialPostsState, action) {
   switch (action.type) {
     case RECEIVE_POSTS:
-      return [
-        ...action.posts
-      ]
+      return [ ...action.posts ]
     case ADD_POST:
       return [
         ...state,
         action.post
       ]
     case DELETE_POST:
-      const deletedPost = state.filter(post => post.id === action.postId)[0]
+      var deletedPost = state.filter(post => post.id === action.postId)[0]
       deletedPost.deleted = true
       return [
         ...state.filter(post => post.id !== action.postId),
         deletedPost
-
       ]
     case UP_VOTE_POST:
-      let currentPost = state.filter(post => post.id === action.postId)[0]
+      var currentPost = state.filter(post => post.id === action.postId)[0]
       currentPost.voteScore = currentPost.voteScore + 1
       currentPost.hasVoted = true
       return [
@@ -47,7 +44,7 @@ function posts(state = initialPostsState, action) {
         currentPost
       ]
     case DOWN_VOTE_POST:
-      const curPost = state.filter(post => post.id === action.postId)[0]
+      var curPost = state.filter(post => post.id === action.postId)[0]
       curPost.voteScore = curPost.voteScore - 1
       curPost.hasVoted = true
       return [
